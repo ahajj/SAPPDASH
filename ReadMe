@@ -9,13 +9,13 @@ All systems are pseudo-randomly generated, along with their metrics and processe
 
 The requirements are the postconditions of AppMonitorMain.main()
 
-The design is AppMonitorMain--->System 
-								   ^
-                        	  	/  |  \
+The design is AppMonitorMain   --->  System 
+				       ^
+                        	    /  |  \
                     		   /   |   \
                     		  /    |    \
-                    		 /	   |     \
-                    		/	   |      \
+                    		 /     |     \
+                    		/      |      \
            	      JavaSystem  HTML5System  DatabaseSystem  (subclasses of System)
 
 A more detailed design can be seen here:
