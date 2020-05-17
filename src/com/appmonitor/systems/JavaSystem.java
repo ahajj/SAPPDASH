@@ -8,13 +8,6 @@ import com.appmonitor.support.AMSupport;
 import com.appmonitor.systems.metrics.Metric;
 import com.appmonitor.systems.processes.Process;
 
-/*
- * Author: Andrew Hajj
- * 	
- * Description: JavaSystem is the most complex type of System supported in the Application Monitoring App.  This is 
- * because it also has processes with metrics that also need to be checked in order to determine the system health. 
- * 
- */
 
 public class JavaSystem extends System {
 	

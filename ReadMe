@@ -1,1 +1,46 @@
-This is the read me file
+Author: Andrew Hajj
+Class: METCS622 Term Project - SAPPDASH
+
+========================================================
+
+This project simulates monitoring a list of systems hosted on the SAP Cloud Platform.
+
+All systems are pseudo-randomly generated, along with their metrics and processes (where applicable).
+
+The requirements are the postconditions of AppMonitorMain.main()
+
+The design is AppMonitorMain--->System 
+								   ^
+                        	  	/  |  \
+                    		   /   |   \
+                    		  /    |    \
+                    		 /	   |     \
+                    		/	   |      \
+           	      JavaSystem  HTML5System  DatabaseSystem  (subclasses of System)
+
+A more detailed design can be seen here:
+https://docs.google.com/spreadsheets/d/1gT_QzD5FxQ8g48AlrMcsA9zKE7ZtiGuJFfMLL39LjPA/edit?usp=sharing
+           	      
+All Systems have a list of Metrics which have contain warning and error thresholds.
+Metrics also contain the current value, as well as the min and max values.
+
+Java Systems have a list of Processes which also have metrics.
+
+The abstract class AMSupport contains a number of supporting fields and functions.  These include:
+	Static final variables (possible system states, warning and error thresholds, metric names...etc.  basically the onestop shop for numbers/text that are used across the application so that if they need to be changed it will only have to be once) 
+
+Upon running AppMonitorMain, the application will generate a number of systems, along with pseudo-randomly generated metric values.
+
+After generating the systems/metrics, the application attempts to analyze the systems.
+	As of right now, the analyzation is fairly simple.  It looks at the metric value and checks to see if it is above the error and/or warning thresholds.
+	Above Warning Threshold generates a message stating the application is unhealthy
+	Above Error Threshold generates a message stating the application should be restarted.
+
+SAPPDASH will then print it's simple analysis to the console.  It will only print all the Java metrics and processes if the Java System is not healthy.
+
+Planned updates would be:
+	Updating the metric values periodically while the application is running (to simulate getting metrics from a live system)
+	Updating the actual metric state & system state when a metric value is above the acceptable thresholds
+	Enhancing SAPPDASH to analyze not just the current value, but also past values of metrics & systems 
+
+No unit testing is incorporated yet.

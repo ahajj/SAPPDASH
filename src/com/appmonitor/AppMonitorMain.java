@@ -17,13 +17,14 @@ public class AppMonitorMain {
 		
 		// main function for the app monitor
 		
-		// First generate the systems
+		// Post Condition 1: Generate the Systems
 		List<System> systems = generateListOfSystems(numberOfSystems);
 		
+		// Post Condition 2: Analysis of each System is on the console
 		for (System system: systems)
 		{
 			// Treat Java apps as special.  We only want to print out the full list of metrics if
-			// the state is not OK
+			// the state is not OK...otherwise it will clutter the console
 			if (system instanceof JavaSystem && system.getState().equals(AMSupport.OK_STATE))
 			{
 				java.lang.System.out.println(((JavaSystem) system).generateSimpleSystemStats());
@@ -44,9 +45,7 @@ public class AppMonitorMain {
 		List<System> systems = new ArrayList<System>();
 		
 		// this list isn't totally random.  It will cycle through java, html5 and database
-		// the states also aren't random.  It will go 1,2 OK; 3 warning, 4 error, 5 critical, 6 OK
-		
-		
+		// the states also aren't random.  It will go 1,2 OK; 3 warning, 4 error, 5 critical, 6 OK	
 		for (int c = 0; c < i; c++)
 		{
 			System system;
@@ -74,6 +73,7 @@ public class AppMonitorMain {
 			system.generateMetrics();
 			
 			// Generate the processes for Java systems
+			// Downcasting
 			if (system instanceof JavaSystem) {
 				((JavaSystem) system).generateProcesses();
 			}
