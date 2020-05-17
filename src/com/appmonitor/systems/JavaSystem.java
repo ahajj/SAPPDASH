@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import com.appmonitor.metrics.Metric;
-import com.appmonitor.processes.Process;
 import com.appmonitor.support.AMSupport;
+import com.appmonitor.systems.metrics.Metric;
+import com.appmonitor.systems.processes.Process;
 
 /*
  * Author: Andrew Hajj
@@ -106,12 +106,14 @@ public class JavaSystem extends System {
 		int randInt = rand.nextInt(MAX_NUMBER_OF_PROCESSES);
 		List<Metric> pMetrics = new ArrayList<Metric>();
 		for (int i = 0; i<randInt; i++) {
+			pMetrics = new ArrayList<Metric>();
 			
 			pMetrics.add(new Metric(AMSupport.USED_DISC_SPACE, AMSupport.OK_STATE, rand.nextInt(AMSupport.MAX_RAND_VALUE), "%", AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD, rand.nextLong(), AMSupport.RATE, AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD));
 			pMetrics.add(new Metric(AMSupport.MEMORY_USAGE, AMSupport.OK_STATE, rand.nextInt(AMSupport.MAX_RAND_VALUE), "%", AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD, rand.nextLong(), AMSupport.RATE, AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD));
 			pMetrics.add(new Metric(AMSupport.CPU_UTILIZATION, AMSupport.OK_STATE, rand.nextInt(AMSupport.MAX_RAND_VALUE), "%", AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD, rand.nextLong(), AMSupport.RATE, AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD));
 
 			processes.add(new Process(getId()+"_process"+i, pMetrics, AMSupport.OK_STATE));
+			
 		}
 	}
 

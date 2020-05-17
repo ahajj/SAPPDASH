@@ -1,4 +1,4 @@
-package com.appmonitor.metrics;
+package com.appmonitor.systems.metrics;
 
 import java.text.Format;
 import java.text.SimpleDateFormat;
@@ -22,62 +22,13 @@ public class Metric {
 	public String getName() {
 		return name;
 	}
-	public void setName(String name) {
-		this.name = name;
-	}
+
 	public String getState() {
 		return state;
 	}
-	public void setState(String state) {
-		this.state = state;
-	}
+
 	public long getValue() {
 		return value;
-	}
-	public void setValue(long value) {
-		this.value = value;
-	}
-	public String getUnit() {
-		return unit;
-	}
-	public void setUnit(String unit) {
-		this.unit = unit;
-	}
-	public int getWarningThreshold() {
-		return warningThreshold;
-	}
-	public void setWarningThreshold(int warningThreshold) {
-		this.warningThreshold = warningThreshold;
-	}
-	public int getErrorThreshold() {
-		return errorThreshold;
-	}
-	public void setErrorThreshold(int errorThreshold) {
-		this.errorThreshold = errorThreshold;
-	}
-	public long getTimestamp() {
-		return timestamp;
-	}
-	public void setTimestamp(long timestamp) {
-		this.timestamp = timestamp;
-	}
-	public String getMetricType() {
-		return metricType;
-	}
-	public void setMetricType(String metricType) {
-		this.metricType = metricType;
-	}
-	public int getMin() {
-		return min;
-	}
-	public void setMin(int min) {
-		this.min = min;
-	}
-	public int getMax() {
-		return max;
-	}
-	public void setMax(int max) {
-		this.max = max;
 	}
 	
 	public Metric(String name, String state, long value, String unit, int warningThreshold, int errorThreshold,
