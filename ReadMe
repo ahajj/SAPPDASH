@@ -43,4 +43,4 @@ Planned updates would be:
 	Updating the actual metric state & system state when a metric value is above the acceptable thresholds
 	Enhancing SAPPDASH to analyze not just the current value, but also past values of metrics & systems 
 
-No unit testing is incorporated yet.
+No unit testing is currently being incorporated in and can be found under 'test'.  The test package structure mirrors src.
