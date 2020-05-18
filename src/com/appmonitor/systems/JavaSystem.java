@@ -49,6 +49,10 @@ public class JavaSystem extends System {
 		this.processes = processes;
 	}
 
+	public void addProcess(Process process) {
+		this.processes.add(process);
+	}
+	
 	@Override
 	public String getSystemHealth() {
 		
@@ -58,6 +62,7 @@ public class JavaSystem extends System {
 		{
 			if (!AMSupport.getStatusForState(process.getState()).equals(AMSupport.HEALTHY_STATUS))
 			{
+				// need to add additional checks to this to check for more severe process states before returning
 				return AMSupport.getStatusForState(process.getState());
 			}
 		}
@@ -97,6 +102,10 @@ public class JavaSystem extends System {
 		Random rand = new Random();
 		
 		int randInt = rand.nextInt(MAX_NUMBER_OF_PROCESSES);
+		
+		// make sure there is at least one process
+		randInt = (randInt == 0) ? 1 : randInt;
+		
 		List<Metric> pMetrics = new ArrayList<Metric>();
 		for (int i = 0; i<randInt; i++) {
 			pMetrics = new ArrayList<Metric>();

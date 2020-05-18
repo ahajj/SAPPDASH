@@ -10,24 +10,13 @@ public class Process {
 	private List<Metric> metrics;
 	private String state;
 	
-//	public String getProcessId() {
-//		return processId;
-//	}
-//	public void setProcessId(String processId) {
-//		this.processId = processId;
-//	}
-//	public List<Metric> getMetrics() {
-//		return metrics;
-//	}
-//	public void setMetrics(List<Metric> metrics) {
-//		this.metrics = metrics;
-//	}
+
 	public String getState() {
 		return state;
 	}
-//	public void setState(String state) {
-//		this.state = state;
-//	}
+	public void setState(String state) {
+		this.state = state;
+	}
 	public Process(String processId, List<Metric> metrics, String state) {
 		super();
 		this.processId = processId;
