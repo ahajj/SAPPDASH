@@ -16,16 +16,16 @@ public class JavaSystem extends System {
 	
 	private final int MAX_NUMBER_OF_PROCESSES = 3;
 
-	public JavaSystem(String type, String account, String state, String application) {
-		super(type, account, state);
+	public JavaSystem(String type, String account, String application) {
+		super(type, account);
 		this.setId(type+account+application);
 		this.application = application;
 		this.processes = new ArrayList<Process>();
 		
 	}
 	
-	public JavaSystem(String type, String account, String state, List<Metric> metrics, String application) {
-		super(type, account, state, metrics);
+	public JavaSystem(String type, String account, List<Metric> metrics, String application) {
+		super(type, account, metrics);
 		this.setId(type+account+application);
 		this.application = application;
 		this.processes = new ArrayList<Process>();
@@ -84,6 +84,43 @@ public class JavaSystem extends System {
 		
 		// use the generic get system health if there are no processes
 		return super.getSystemHealth();
+	}
+	
+	@Override
+	public void generateState() {
+		
+		super.generateState();
+		
+		// can't get more severe than error or critical
+		if (this.getState().equals(AMSupport.CRITICAL_STATE) || this.getState().equals(AMSupport.ERROR_STATE) || this.getState().equals(AMSupport.UNKNOWN_STATE))
+		{
+			return;
+		}
+		
+		String sysState = this.getState();
+		
+		// now we need to check the processes' states to see if there are any more severe than the metrics
+		for (Process process : processes)
+		{
+			String procState = process.getState();
+			
+			// set the process to critical/error/unknown if any metric is one of those states
+			if (procState.equals(AMSupport.CRITICAL_STATE) || procState.equals(AMSupport.ERROR_STATE) || procState.equals(AMSupport.UNKNOWN_STATE))
+			{
+				this.setState(procState);
+				return;
+			}
+			// make note of metrics that are in warning state
+			// we don't want to just set the process to that state
+			// in case a process further down the line has a more severe state
+			else if (procState.equals(AMSupport.WARNING_STATE))
+			{
+				sysState = procState;			
+			}
+		}
+		
+		this.setState(sysState);
+		
 	}
 
 	@Override

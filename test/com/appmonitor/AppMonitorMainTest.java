@@ -33,20 +33,5 @@ class AppMonitorMainTest {
 		Assert.assertTrue(generatedSystems.get(4) instanceof HTML5System);
 	}
 	
-	@Test
-	void testGenerateStateBasedOnNumber() {
-		// test that generateStateBasedOnNumber returns the correct state for each number
-		
-		Assert.assertTrue(AppMonitorMain.generateStateBasedOnNumber(0).equals(AMSupport.OK_STATE));
-		Assert.assertTrue(AppMonitorMain.generateStateBasedOnNumber(1).equals(AMSupport.OK_STATE));
-		Assert.assertTrue(AppMonitorMain.generateStateBasedOnNumber(2).equals(AMSupport.OK_STATE));
-		Assert.assertTrue(AppMonitorMain.generateStateBasedOnNumber(3).equals(AMSupport.WARNING_STATE));
-		Assert.assertTrue(AppMonitorMain.generateStateBasedOnNumber(4).equals(AMSupport.ERROR_STATE));
-		Assert.assertTrue(AppMonitorMain.generateStateBasedOnNumber(5).equals(AMSupport.CRITICAL_STATE));
-		Assert.assertTrue(AppMonitorMain.generateStateBasedOnNumber(6).equals(AMSupport.OK_STATE));
-		Assert.assertTrue(AppMonitorMain.generateStateBasedOnNumber(7).equals(AMSupport.OK_STATE));
-		Assert.assertTrue(AppMonitorMain.generateStateBasedOnNumber(8).equals(AMSupport.OK_STATE));
-
-	}
 
 }

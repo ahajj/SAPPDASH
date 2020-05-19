@@ -18,7 +18,7 @@ public class JavaSystemTest {
 		
 		// create the JavaSystem
 		
-		JavaSystem js = new JavaSystem("test1", "test2",AMSupport.OK_STATE, "test4");
+		JavaSystem js = new JavaSystem("test1", "test2", "test4");
 		
 		// add one process at a time to control the test
 

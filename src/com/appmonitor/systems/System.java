@@ -64,21 +64,20 @@ public abstract class System {
 		this.metrics = new ArrayList<Metric>();
 	}
 	
-	public System(String type, String account, String state, List<Metric> metrics) {
+	public System(String type, String account, List<Metric> metrics) {
 		super();
 		this.setId(""); 
 		this.type = type;
 		this.account = account;
-		this.state = state;
 		this.metrics = metrics;
+		this.generateState();
 	}
 	
-	public System(String type, String account, String state) {
+	public System(String type, String account) {
 		super();
 		this.setId("");
 		this.type = type;
 		this.account = account;
-		this.state = state;
 		this.metrics = new ArrayList<Metric>();
 	}
 	
@@ -124,6 +123,32 @@ public abstract class System {
 	public abstract String generateSystemStats();
 	public abstract void generateMetrics();
 
+	public void generateState() {
+			
+		String sysState = AMSupport.OK_STATE;
+		
+		// base the system state on the metric state
+		for (Metric metric : metrics)
+		{
+			String metricState = metric.getState();
+			
+			// set the process to critical/error/unknown if any metric is one of those states
+			if (metricState.equals(AMSupport.CRITICAL_STATE) || metricState.equals(AMSupport.ERROR_STATE) || metricState.equals(AMSupport.UNKNOWN_STATE))
+			{
+				state = metricState;
+				return;
+			}
+			// make note of metrics that are in warning state
+			// we don't want to just set the process to that state
+			// in case a metric further down the line has a more severe state
+			else if (metricState.equals(AMSupport.WARNING_STATE))
+			{
+				sysState = metricState;			
+			}
+		}
+		
+		state = sysState;
+	}
 	
 	@Override
 	public String toString()

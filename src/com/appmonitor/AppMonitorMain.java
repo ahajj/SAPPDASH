@@ -53,18 +53,18 @@ public class AppMonitorMain {
 			switch (c%3) {
 			// java system
 			case 0: 
-				system = new JavaSystem("java","account"+ c, generateStateBasedOnNumber(c),"applicationName"+c);
+				system = new JavaSystem("java","account"+ c,"applicationName"+c);
 				break;
 			// html5 system
 			case 1:
-				system = new HTML5System("html5","account"+ c, generateStateBasedOnNumber(c),"applicationName"+c);
+				system = new HTML5System("html5","account"+ c,"applicationName"+c);
 				break;
 			// database system
 			case 2:
-				system = new DatabaseSystem("database","account"+ c, generateStateBasedOnNumber(c),"applicationName"+c);
+				system = new DatabaseSystem("database","account"+ c,"applicationName"+c);
 				break;
 			default:
-				system = new JavaSystem("java","account"+ c, generateStateBasedOnNumber(c),"applicationName"+c);
+				system = new JavaSystem("java","account"+ c,"applicationName"+c);
 				break;
 			}
 			
@@ -77,26 +77,11 @@ public class AppMonitorMain {
 			if (system instanceof JavaSystem) {
 				((JavaSystem) system).generateProcesses();
 			}
+			system.generateState();
 			systems.add(system);
 		}
 		
 		return systems;
-	}
-	
-	// the states also aren't random.  It will go 1,2 OK; 3 warning, 4 error, 5 critical, 6 OK
-	public static String generateStateBasedOnNumber(int i)
-	{
-		switch (i%7)
-		{
-		case 3: 
-			return AMSupport.WARNING_STATE;
-		case 4:
-			return AMSupport.ERROR_STATE;
-		case 5:
-			return AMSupport.CRITICAL_STATE;
-		default:
-			return AMSupport.OK_STATE;
-		}
 	}
 
 }

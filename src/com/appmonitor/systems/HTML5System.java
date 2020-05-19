@@ -11,15 +11,15 @@ public class HTML5System extends System {
 
 	private String application;
 	
-	public HTML5System(String type, String account, String state, String application) {
-		super(type, account, state);
+	public HTML5System(String type, String account, String application) {
+		super(type, account);
 		this.setId(type+account+application);
 		this.application = application;
 		// TODO Auto-generated constructor stub
 	}
 	
-	public HTML5System(String type, String account, String state, List<Metric> metrics, String application) {
-		super(type, account, state, metrics);
+	public HTML5System(String type, String account, List<Metric> metrics, String application) {
+		super(type, account, metrics);
 		this.setId(type+account+application);
 		this.application = application;
 		// TODO Auto-generated constructor stub

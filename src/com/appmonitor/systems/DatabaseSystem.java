@@ -10,15 +10,15 @@ public class DatabaseSystem extends System {
 
 	private String dbsystem;
 	
-	public DatabaseSystem(String type, String account, String state, List<Metric> metrics, String dbsystem) {
-		super(type, account, state, metrics);
+	public DatabaseSystem(String type, String account, List<Metric> metrics, String dbsystem) {
+		super(type, account, metrics);
 		this.setId(type+account+dbsystem);
 		// TODO Auto-generated constructor stubf
 		this.dbsystem = dbsystem;
 	}
 
-	public DatabaseSystem(String type, String account, String state, String dbsystem) {
-		super(type, account, state);
+	public DatabaseSystem(String type, String account, String dbsystem) {
+		super(type, account);
 		this.setId(type+account+dbsystem);
 		// TODO Auto-generated constructor stub
 		this.dbsystem = dbsystem;
