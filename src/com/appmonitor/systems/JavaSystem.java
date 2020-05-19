@@ -123,6 +123,7 @@ public class JavaSystem extends System {
 		
 	}
 
+	// The function that will generate the complete information (including metrics and processes) about the java system
 	@Override
 	public String generateSystemStats() {
 		String outputString = "Java " + super.toString();
@@ -140,6 +141,7 @@ public class JavaSystem extends System {
 		return outputString;
 	}
 	
+	// the function called to just show basic information about the java system
 	public String generateSimpleSystemStats() {
 		String outputString = "Java " + generateHeader();
 		

@@ -11,6 +11,7 @@ import com.appmonitor.systems.System;
 
 public class AppMonitorMain {
 	
+	// This sets the number of systems generated to 20.
 	private final static int numberOfSystems = 20;
 
 	public static void main(String[] args) {
@@ -45,7 +46,6 @@ public class AppMonitorMain {
 		List<System> systems = new ArrayList<System>();
 		
 		// this list isn't totally random.  It will cycle through java, html5 and database
-		// the states also aren't random.  It will go 1,2 OK; 3 warning, 4 error, 5 critical, 6 OK	
 		for (int c = 0; c < i; c++)
 		{
 			System system;
@@ -69,7 +69,7 @@ public class AppMonitorMain {
 			}
 			
 			// Generate the metrics for each system
-			// Polymorpism
+			// Polymorphism
 			system.generateMetrics();
 			
 			// Generate the processes for Java systems
@@ -77,6 +77,7 @@ public class AppMonitorMain {
 			if (system instanceof JavaSystem) {
 				((JavaSystem) system).generateProcesses();
 			}
+			// Generate the state of the system based on the metrics and processes (when applicable)
 			system.generateState();
 			systems.add(system);
 		}

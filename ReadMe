@@ -7,7 +7,7 @@ This project simulates monitoring a list of systems hosted on the SAP Cloud Plat
 
 All systems are pseudo-randomly generated, along with their metrics and processes (where applicable).
 
-The requirements are the postconditions of AppMonitorMain.main()
+The requirements are the postconditions of AppMonitorMain.main() - the long and short of it is that the system is to 1) generate systems and metrics and 2) print an analysis of these systems to the console
 
 The design is AppMonitorMain   --->  System 
 				       ^
@@ -18,7 +18,7 @@ The design is AppMonitorMain   --->  System
                     		/      |      \
            	      JavaSystem  HTML5System  DatabaseSystem  (subclasses of System)
 
-A more detailed design can be seen here:
+A more detailed design and use case can be seen here:
 https://docs.google.com/spreadsheets/d/1gT_QzD5FxQ8g48AlrMcsA9zKE7ZtiGuJFfMLL39LjPA/edit?usp=sharing
            	      
 All Systems have a list of Metrics which have contain warning and error thresholds.
@@ -29,7 +29,7 @@ Java Systems have a list of Processes which also have metrics.
 The abstract class AMSupport contains a number of supporting fields and functions.  These include:
 	Static final variables (possible system states, warning and error thresholds, metric names...etc.  basically the onestop shop for numbers/text that are used across the application so that if they need to be changed it will only have to be once) 
 
-Upon running AppMonitorMain, the application will generate a number of systems, along with pseudo-randomly generated metric values.
+Upon running AppMonitorMain (under com.appmonitor), the application will generate a number of systems, along with pseudo-randomly generated metric values.
 
 After generating the systems/metrics, the application attempts to analyze the systems.
 	As of right now, the analyzation is fairly simple.  It looks at the metric value and checks to see if it is above the error and/or warning thresholds.
@@ -42,4 +42,63 @@ Planned updates would be:
 	Updating the metric values periodically while the application is running (to simulate getting metrics from a live system)
 	Enhancing SAPPDASH to analyze not just the current value, but also past values of metrics & systems 
 
-Unit testing is currently being incorporated in and can be found under 'test'.  The test package structure mirrors src.
+Unit testing is currently being incorporated in and can be found under 'test'.  The test package structure mirrors src.  These unit tests are used to test the logic behind setting states/statusus
+
+The following is a sample output from the system.  The HTML5 application was given a state of 'Error' as it's second metric's value is above the error threshold:
+
+HTML5 Application: html5account16applicationName16
+		Account: account16
+		State: Error
+		Type: html5
+	Metrics: 
+	Metric 'HTML5 Metric 1': 
+		State: Ok...Current Value: 1 %
+		Min Value: 20 %...Max Value: 30 %
+		Warning Threshold: 20 %...Error Threshold: 30 %
+		Timestamp: 2020 05 18 22:32:33
+		Output: Healthy - 'HTML5 Metric 1' at 1 %
+	**** Analysis: Metric Value in Acceptable Range.	****
+
+	Metric 'HTML5 Metric 2': 
+		State: Error...Current Value: 34 %
+		Min Value: 20 %...Max Value: 30 %
+		Warning Threshold: 20 %...Error Threshold: 30 %
+		Timestamp: 2020 05 18 22:43:07
+		Output: Restart Recommended - 'HTML5 Metric 2' at 34 %
+	**** Analysis: Error! Metric Value is greatly above the Acceptable Range!	****
+
+
+Database Application: databaseaccount17applicationName17
+		Account: account17
+		State: Ok
+		Type: database
+	Metrics: 
+	Metric 'CPU Load': 
+		State: Ok...Current Value: 59 %
+		Min Value: 90 %...Max Value: 95 %
+		Warning Threshold: 90 %...Error Threshold: 95 %
+		Timestamp: 2020 05 18 22:45:32
+		Output: Healthy - 'CPU Load' at 59 %
+	**** Analysis: Metric Value in Acceptable Range.	****
+
+	Metric 'Disk I/O': 
+		State: Ok...Current Value: 65 %
+		Min Value: 90 %...Max Value: 95 %
+		Warning Threshold: 90 %...Error Threshold: 95 %
+		Timestamp: 2020 05 18 22:20:02
+		Output: Healthy - 'Disk I/O' at 65 %
+	**** Analysis: Metric Value in Acceptable Range.	****
+
+
+Java Application: javaaccount18applicationName18
+		Account: account18
+		State: Ok
+		Type: java
+	Metrics: 
+	Metric 'Used Disc Space': 
+		State: Ok...Current Value: 42 %
+		Min Value: 90 %...Max Value: 95 %
+		Warning Threshold: 90 %...Error Threshold: 95 %
+		Timestamp: 2020 05 18 23:15:14
+		Output: Healthy - 'Used Disc Space' at 42 %
+	**** Analysis: Metric Value in Acceptable Range.	****

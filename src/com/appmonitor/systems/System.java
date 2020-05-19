@@ -107,6 +107,8 @@ public abstract class System {
 		return outputString;
 	}
 	
+	
+	// searches the systems metrics for the metric with the passed in name
 	protected Metric getMetricNamed(String name)
 	{
 		for (Metric metric: metrics)
@@ -119,10 +121,11 @@ public abstract class System {
 		return null; // returns null if the metric is not found;
 	}
 	
-	// Make this function abstract so all system classes have to implement it.
+	// Make these functions abstract so all system classes have to implement it.
 	public abstract String generateSystemStats();
 	public abstract void generateMetrics();
 
+	// generate the state of the system based on the states of its metrics
 	public void generateState() {
 			
 		String sysState = AMSupport.OK_STATE;
