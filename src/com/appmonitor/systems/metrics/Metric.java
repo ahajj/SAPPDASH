@@ -31,11 +31,15 @@ public class Metric {
 		return value;
 	}
 	
-	public Metric(String name, String state, long value, String unit, int warningThreshold, int errorThreshold,
+	public void setValue(long value) {
+		this.value = value;
+		this.generateStateBasedOnValueAndThresholds();
+	}
+	
+	public Metric(String name, long value, String unit, int warningThreshold, int errorThreshold,
 			long timestamp, String metricType, int min, int max) {
 		super();
 		this.name = name;
-		this.state = state;
 		this.value = value;
 		this.unit = unit;
 		this.warningThreshold = warningThreshold;
@@ -44,6 +48,23 @@ public class Metric {
 		this.metricType = metricType;
 		this.min = min;
 		this.max = max;
+		
+		this.generateStateBasedOnValueAndThresholds();
+	}
+	
+	protected void generateStateBasedOnValueAndThresholds()
+	{
+		if (value >= errorThreshold)
+		{
+			state = AMSupport.ERROR_STATE;
+		}
+		else if (value >= warningThreshold)
+		{
+			state = AMSupport.WARNING_STATE;
+		}
+		else {
+			state = AMSupport.OK_STATE;
+		}
 	}
 	
 	// since this application is text based

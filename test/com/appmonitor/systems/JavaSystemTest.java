@@ -22,7 +22,8 @@ public class JavaSystemTest {
 		
 		// add one process at a time to control the test
 
-		js.addProcess(new Process("test1"+"_process1", new ArrayList<Metric>(), AMSupport.OK_STATE));
+		js.addProcess(new Process("test1"+"_process1", new ArrayList<Metric>()));
+		js.getProcesses().get(0).setState(AMSupport.OK_STATE);
 		
 		// having a process with OK_STATE and no metrics should generate the status based on the state of the system
 		// in this case, an ok state should mean the system is healthy
@@ -30,13 +31,15 @@ public class JavaSystemTest {
 	
 		// now test with a Warning process
 
-		js.addProcess(new Process("test1"+"_process1", new ArrayList<Metric>(), AMSupport.WARNING_STATE));
+		js.addProcess(new Process("test1"+"_process1", new ArrayList<Metric>()));
+		js.getProcesses().get(0).setState(AMSupport.WARNING_STATE);
 		// having a process with WARNING_STATE and no metrics should return a unhealthy status
 		Assert.assertTrue("System status was instead: " + js.getSystemHealth(), js.getSystemHealth().equals(AMSupport.UNHEALTHY_STATUS));
 	
 		// now test with a Critical process
 
-		js.addProcess(new Process("test1"+"_process1", new ArrayList<Metric>(), AMSupport.CRITICAL_STATE));
+		js.addProcess(new Process("test1"+"_process1", new ArrayList<Metric>()));
+		js.getProcesses().get(0).setState(AMSupport.CRITICAL_STATE);
 		// having a process with CRITICAL_STATE and no metrics should return a restart status
 		
 		Assert.assertTrue("System status was instead: " + js.getSystemHealth(), js.getSystemHealth().equals(AMSupport.RESTART_STATUS));

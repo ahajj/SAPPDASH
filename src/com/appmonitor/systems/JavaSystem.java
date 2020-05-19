@@ -58,13 +58,28 @@ public class JavaSystem extends System {
 		
 		// check each individual process to see if there is any unhealthy one
 		// if there are any processes with unhealthy metrics then return the recommended status
+		
+		String sysStatus = AMSupport.HEALTHY_STATUS;
+		
+		// if the process status is unknown or critical then return it right away
+		// otherwise, if any one process is unhealthy then return that
+		// finally, go to System.getSystemHealth() if all processes are healthy
 		for (Process process: this.getProcesses())
 		{
-			if (!AMSupport.getStatusForState(process.getState()).equals(AMSupport.HEALTHY_STATUS))
+			String procStatus = AMSupport.getStatusForState(process.getState());
+			if (procStatus.equals(AMSupport.UNHEALTHY_STATUS))
 			{
-				// need to add additional checks to this to check for more severe process states before returning
-				return AMSupport.getStatusForState(process.getState());
+				sysStatus = AMSupport.getStatusForState(process.getState());
 			}
+			else if (procStatus.equals(AMSupport.UNKNOWN_STATUS) || procStatus.equals(AMSupport.RESTART_STATUS))
+			{
+				return AMSupport.getStatusForState(process.getState());				
+			}
+		}
+		
+		if (!sysStatus.equals(AMSupport.HEALTHY_STATUS))
+		{
+			return sysStatus;
 		}
 		
 		// use the generic get system health if there are no processes
@@ -110,11 +125,11 @@ public class JavaSystem extends System {
 		for (int i = 0; i<randInt; i++) {
 			pMetrics = new ArrayList<Metric>();
 			
-			pMetrics.add(new Metric(AMSupport.USED_DISC_SPACE, AMSupport.OK_STATE, rand.nextInt(AMSupport.MAX_RAND_VALUE), "%", AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD, rand.nextLong(), AMSupport.RATE, AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD));
-			pMetrics.add(new Metric(AMSupport.MEMORY_USAGE, AMSupport.OK_STATE, rand.nextInt(AMSupport.MAX_RAND_VALUE), "%", AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD, rand.nextLong(), AMSupport.RATE, AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD));
-			pMetrics.add(new Metric(AMSupport.CPU_UTILIZATION, AMSupport.OK_STATE, rand.nextInt(AMSupport.MAX_RAND_VALUE), "%", AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD, rand.nextLong(), AMSupport.RATE, AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD));
+			pMetrics.add(new Metric(AMSupport.USED_DISC_SPACE, rand.nextInt(AMSupport.MAX_RAND_VALUE), "%", AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD, rand.nextLong(), AMSupport.RATE, AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD));
+			pMetrics.add(new Metric(AMSupport.MEMORY_USAGE, rand.nextInt(AMSupport.MAX_RAND_VALUE), "%", AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD, rand.nextLong(), AMSupport.RATE, AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD));
+			pMetrics.add(new Metric(AMSupport.CPU_UTILIZATION, rand.nextInt(AMSupport.MAX_RAND_VALUE), "%", AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD, rand.nextLong(), AMSupport.RATE, AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD));
 
-			processes.add(new Process(getId()+"_process"+i, pMetrics, AMSupport.OK_STATE));
+			processes.add(new Process(getId()+"_process"+i, pMetrics));
 			
 		}
 	}
@@ -123,14 +138,14 @@ public class JavaSystem extends System {
 	public void generateMetrics() {
 		Random rand = new Random();
 		// the standard generate metrics function will generate 8 metrics
-		addMetric(new Metric(AMSupport.USED_DISC_SPACE, AMSupport.OK_STATE, rand.nextInt(AMSupport.MAX_RAND_VALUE), "%", AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD, rand.nextLong(), AMSupport.RATE, AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD));
-		addMetric(new Metric(AMSupport.REQ_PER_MIN, AMSupport.OK_STATE, rand.nextInt(), "requests", 0, 0, rand.nextLong(), AMSupport.PERFORMANCE, AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD));
-		addMetric(new Metric(AMSupport.CPU_LOAD, AMSupport.OK_STATE, rand.nextInt(AMSupport.MAX_RAND_VALUE), "%", AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD, rand.nextLong(), AMSupport.RATE, AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD));
-		addMetric(new Metric(AMSupport.DISK_IO, AMSupport.OK_STATE, rand.nextInt(AMSupport.MAX_RAND_VALUE), "%", AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD, rand.nextLong(), AMSupport.RATE, AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD));
-		addMetric(new Metric(AMSupport.OS_MEM_USAGE, AMSupport.OK_STATE,  rand.nextInt(AMSupport.MAX_RAND_VALUE), "%", AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD, rand.nextLong(), AMSupport.RATE, AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD));
-		addMetric(new Metric(AMSupport.HEAP_MEM_USAGE, AMSupport.OK_STATE, rand.nextInt(AMSupport.MAX_RAND_VALUE), "%", AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD, rand.nextLong(), AMSupport.RATE, AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD));
-		addMetric(new Metric(AMSupport.AVG_RESP_TIME, AMSupport.OK_STATE, rand.nextInt(AMSupport.MAX_RAND_VALUE), "ms", 0, 0, rand.nextLong(), AMSupport.PERFORMANCE, AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD));
-		addMetric(new Metric(AMSupport.BUSY_THREADS, AMSupport.OK_STATE, rand.nextInt(AMSupport.MAX_RAND_VALUE), "", AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD, rand.nextLong(), AMSupport.RATE, AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD));
+		addMetric(new Metric(AMSupport.USED_DISC_SPACE, rand.nextInt(AMSupport.MAX_RAND_VALUE), "%", AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD, rand.nextLong(), AMSupport.RATE, AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD));
+		addMetric(new Metric(AMSupport.REQ_PER_MIN, rand.nextInt(), "requests", 0, 0, rand.nextLong(), AMSupport.PERFORMANCE, AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD));
+		addMetric(new Metric(AMSupport.CPU_LOAD, rand.nextInt(AMSupport.MAX_RAND_VALUE), "%", AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD, rand.nextLong(), AMSupport.RATE, AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD));
+		addMetric(new Metric(AMSupport.DISK_IO, rand.nextInt(AMSupport.MAX_RAND_VALUE), "%", AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD, rand.nextLong(), AMSupport.RATE, AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD));
+		addMetric(new Metric(AMSupport.OS_MEM_USAGE,  rand.nextInt(AMSupport.MAX_RAND_VALUE), "%", AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD, rand.nextLong(), AMSupport.RATE, AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD));
+		addMetric(new Metric(AMSupport.HEAP_MEM_USAGE, rand.nextInt(AMSupport.MAX_RAND_VALUE), "%", AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD, rand.nextLong(), AMSupport.RATE, AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD));
+		addMetric(new Metric(AMSupport.AVG_RESP_TIME, rand.nextInt(AMSupport.MAX_RAND_VALUE), "ms", 0, 0, rand.nextLong(), AMSupport.PERFORMANCE, AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD));
+		addMetric(new Metric(AMSupport.BUSY_THREADS, rand.nextInt(AMSupport.MAX_RAND_VALUE), "", AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD, rand.nextLong(), AMSupport.RATE, AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD));
 	}
 	
 	
