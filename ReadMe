@@ -40,7 +40,6 @@ SAPPDASH will then print it's simple analysis to the console.  It will only prin
 
 Planned updates would be:
 	Updating the metric values periodically while the application is running (to simulate getting metrics from a live system)
-	Updating the actual metric state & system state when a metric value is above the acceptable thresholds
 	Enhancing SAPPDASH to analyze not just the current value, but also past values of metrics & systems 
 
-No unit testing is currently being incorporated in and can be found under 'test'.  The test package structure mirrors src.
+Unit testing is currently being incorporated in and can be found under 'test'.  The test package structure mirrors src.

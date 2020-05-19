@@ -54,6 +54,17 @@ public class Metric {
 	
 	protected void generateStateBasedOnValueAndThresholds()
 	{
+		
+		// only generate a non ok_state if not Average Response Time or Requests per Minute
+		// for now those do not have error or warning thresholds
+		
+		if (name.equals(AMSupport.AVG_RESP_TIME) || name.equals(AMSupport.REQ_PER_MIN))
+		{
+			state = AMSupport.OK_STATE;
+			return;
+		}
+		
+		// other metric types should look at the error and warning thresholds
 		if (value >= errorThreshold)
 		{
 			state = AMSupport.ERROR_STATE;
@@ -72,18 +83,14 @@ public class Metric {
 	@Override
 	public String toString()
 	{
-		return "	Metric " + name + ": "
-				+ "\n		State: " + state
-				+ "\n		Value: " + value
-				+ "\n		Unit: " + unit
-				+ "\n		Warning Threshold: " + warningThreshold
-				+ "\n		Error Threshold: " + errorThreshold
+		return "	Metric '" + name + "': "
+				+ "\n		State: " + state + "...Current Value: " + value + " " + unit
+				+ "\n		Min Value: " + min + " " + unit + "...Max Value: " + max + " " + unit
+				+ "\n		Warning Threshold: " + warningThreshold + " " + unit + "...Error Threshold: " + errorThreshold + " " + unit
 				+ "\n		Timestamp: " + convertTime(timestamp)
-				+ "\n		Type: " + metricType
-				+ "\n		Min: " + min
-				+ "\n		Max: " + max
 				+ "\n		Output: " + generateOutput();
 	}
+	
 	
 	private String convertTime(long time){
 	    Date date = new Date(time);
@@ -98,10 +105,7 @@ public class Metric {
 		
 		// generate a little status blurb
 		output += AMSupport.getStatusForState(state) + " - " 	
-				+ ((name.equals(AMSupport.REQ_PER_MIN) || name.equals(AMSupport.AVG_RESP_TIME)) 
-						? value + " " + unit + " " + name 
-						: value + " " + unit);
-		
+				+ "'" + name + "' at " + value + " " + unit;
 		// Analyze the metric to see the value is under Error and Warning levels
 		output += "\n	**** Analysis: " + ((warningThreshold == 0 && errorThreshold == 0) ? (value + " " + unit + " " + name) : AMSupport.getMessageForValueWithThresholds(value, warningThreshold, errorThreshold)) + "	****\n\n";
 		

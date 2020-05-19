@@ -24,7 +24,13 @@ public class Process {
 		this.metrics = metrics;
 		this.generateStateBasedOnMetricStates();
 	}
-	
+	public Process(String processId, String state, List<Metric> metrics) {
+		super();
+		this.processId = processId;
+		this.metrics = metrics;
+		this.state = state;
+		this.generateStateBasedOnMetricStates();
+	}	
 	protected void generateStateBasedOnMetricStates()
 	{
 		

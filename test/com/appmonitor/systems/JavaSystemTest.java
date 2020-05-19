@@ -19,27 +19,27 @@ public class JavaSystemTest {
 		// create the JavaSystem
 		
 		JavaSystem js = new JavaSystem("test1", "test2", "test4");
+		js.setState(AMSupport.OK_STATE);
 		
 		// add one process at a time to control the test
 
-		js.addProcess(new Process("test1"+"_process1", new ArrayList<Metric>()));
-		js.getProcesses().get(0).setState(AMSupport.OK_STATE);
+		js.addProcess(new Process("test1"+"_process1",AMSupport.OK_STATE, new ArrayList<Metric>()));
 		
 		// having a process with OK_STATE and no metrics should generate the status based on the state of the system
 		// in this case, an ok state should mean the system is healthy
 		Assert.assertTrue("System status was instead: " + js.getSystemHealth(), js.getSystemHealth().equals(AMSupport.HEALTHY_STATUS));
 	
 		// now test with a Warning process
-
-		js.addProcess(new Process("test1"+"_process1", new ArrayList<Metric>()));
-		js.getProcesses().get(0).setState(AMSupport.WARNING_STATE);
-		// having a process with WARNING_STATE and no metrics should return a unhealthy status
+		List<Metric> metrics = new ArrayList<Metric>();
+		metrics.add(new Metric("metric1", 50l, "%", 45, 60, 23442433, "rate", 50, 70));
+		js.addProcess(new Process("test1"+"_process1", metrics));
+		// having a process with WARNING_STATE and a metric in warning state should return a Unhealthy system
 		Assert.assertTrue("System status was instead: " + js.getSystemHealth(), js.getSystemHealth().equals(AMSupport.UNHEALTHY_STATUS));
 	
 		// now test with a Critical process
-
-		js.addProcess(new Process("test1"+"_process1", new ArrayList<Metric>()));
-		js.getProcesses().get(0).setState(AMSupport.CRITICAL_STATE);
+		List<Metric> metrics2 = new ArrayList<Metric>();
+		metrics2.add(new Metric("metric2", 65l, "%", 45, 60, 23442433, "rate", 50, 70));
+		js.addProcess(new Process("test1"+"_process1", metrics2));
 		// having a process with CRITICAL_STATE and no metrics should return a restart status
 		
 		Assert.assertTrue("System status was instead: " + js.getSystemHealth(), js.getSystemHealth().equals(AMSupport.RESTART_STATUS));

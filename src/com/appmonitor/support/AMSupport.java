@@ -55,6 +55,12 @@ public abstract class AMSupport {
 	public static final int MAX_RAND_VALUE = 101;
 	public static final int MAX_RAND_VALUE_HTML5 = 40;
 	
+	// A baseline ms since epoch.  This will help make the timestamps make more sense
+	public static final long MIN_SEC_EPOCH = 1589854769496l;
+	
+	// max number of ms from MIN_SEC_EPOCH 
+	public static final int MAX_MS = 3500000;
+	
 	public static String getStatusForState(String state) {
 		switch (state) {
 		case OK_STATE: 

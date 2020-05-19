@@ -36,8 +36,8 @@ public class HTML5System extends System {
 	public void generateMetrics() {
 		
 		Random rand = new Random();
-		addMetric(new Metric(AMSupport.HTML5_METRIC1,  rand.nextInt(AMSupport.MAX_RAND_VALUE_HTML5), "%", AMSupport.HTML5_WARNING_THRESHOLD, AMSupport.HTML5_ERROR_THRESHOLD, rand.nextLong(), AMSupport.RATE, AMSupport.HTML5_WARNING_THRESHOLD, AMSupport.HTML5_ERROR_THRESHOLD));
-		addMetric(new Metric(AMSupport.HTML5_METRIC2, rand.nextInt(AMSupport.MAX_RAND_VALUE_HTML5), "%", AMSupport.HTML5_WARNING_THRESHOLD, AMSupport.HTML5_ERROR_THRESHOLD, rand.nextLong(), AMSupport.RATE, AMSupport.HTML5_WARNING_THRESHOLD, AMSupport.HTML5_ERROR_THRESHOLD));
+		addMetric(new Metric(AMSupport.HTML5_METRIC1,  rand.nextInt(AMSupport.MAX_RAND_VALUE_HTML5), "%", AMSupport.HTML5_WARNING_THRESHOLD, AMSupport.HTML5_ERROR_THRESHOLD, AMSupport.MIN_SEC_EPOCH + rand.nextInt(AMSupport.MAX_MS), AMSupport.RATE, AMSupport.HTML5_WARNING_THRESHOLD, AMSupport.HTML5_ERROR_THRESHOLD));
+		addMetric(new Metric(AMSupport.HTML5_METRIC2, rand.nextInt(AMSupport.MAX_RAND_VALUE_HTML5), "%", AMSupport.HTML5_WARNING_THRESHOLD, AMSupport.HTML5_ERROR_THRESHOLD, AMSupport.MIN_SEC_EPOCH + rand.nextInt(AMSupport.MAX_MS), AMSupport.RATE, AMSupport.HTML5_WARNING_THRESHOLD, AMSupport.HTML5_ERROR_THRESHOLD));
 		
 	}
 	
