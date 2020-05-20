@@ -31,6 +31,8 @@ The abstract class AMSupport contains a number of supporting fields and function
 
 Upon running AppMonitorMain (under com.appmonitor), the application will generate a number of systems, along with pseudo-randomly generated metric values.
 
+**Note: Currently the application is set to generate 6 systems (2 Java Systems, 2 Database Systems and 2 HTML5 Systems).  This can be changed in AppMonitorMain by changing 'numberOfSystems'
+
 After generating the systems/metrics, the application attempts to analyze the systems.
 	As of right now, the analyzation is fairly simple.  It looks at the metric value and checks to see if it is above the error and/or warning thresholds.
 	Above Warning Threshold generates a message stating the application is unhealthy

@@ -11,8 +11,8 @@ import com.appmonitor.systems.System;
 
 public class AppMonitorMain {
 	
-	// This sets the number of systems generated to 20.
-	private final static int numberOfSystems = 20;
+	// This sets the number of systems generated to 6.
+	private final static int numberOfSystems = 6;
 
 	public static void main(String[] args) {
 		
