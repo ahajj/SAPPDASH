@@ -1,16 +1,20 @@
 package com.appmonitor.systems.metrics;
 
+import java.io.Serializable;
 import java.text.Format;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import com.appmonitor.support.AMSupport;
 
-public class Metric {
+public class Metric implements Serializable {
 
 	private String name;
 	private String state;
 	private long value;
+	private List<Long> values;
 	private String unit;
 	private int warningThreshold;
 	private int errorThreshold;
@@ -32,7 +36,18 @@ public class Metric {
 	}
 	
 	public void setValue(long value) {
+		
+		// add the value to the values list
+		values.add(value);
+		
 		this.value = value;
+		
+		// we only want to keep a history of the last 500 entries
+		if (values.size() > 500)
+		{
+			// this will remove the oldest value
+			values.remove(0);
+		}
 		
 		// update the timestamp on the metric
 		this.timestamp = timestamp + AMSupport.MS_PER_REFRESH;
@@ -53,6 +68,8 @@ public class Metric {
 		this.min = min;
 		this.max = max;
 		
+		this.values = new ArrayList<Long>();
+		this.values.add(value);
 		this.generateStateBasedOnValueAndThresholds();
 	}
 	
@@ -119,5 +136,22 @@ public class Metric {
 	public String getUnit() {
 		// TODO Auto-generated method stub
 		return unit;
+	}
+	
+	public Double getAverageValue()
+	{
+		Double toGo = 0d;
+		
+		if (values.size() == 0)
+		{
+			return toGo;
+		}
+		
+		for (Long value: values)
+		{
+			toGo += value;
+		}
+		
+		return toGo/values.size();
 	}
 }

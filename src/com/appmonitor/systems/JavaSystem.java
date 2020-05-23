@@ -178,7 +178,7 @@ public class JavaSystem extends System {
 		Random rand = new Random();
 		// the standard generate metrics function will generate 8 metrics
 		addMetric(new Metric(AMSupport.USED_DISC_SPACE, rand.nextInt(AMSupport.MAX_RAND_VALUE), "%", AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD, AMSupport.MIN_SEC_EPOCH + rand.nextInt(AMSupport.MAX_MS), AMSupport.RATE, AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD));
-		addMetric(new Metric(AMSupport.REQ_PER_MIN, rand.nextInt(), "requests", 0, 0, AMSupport.MIN_SEC_EPOCH + rand.nextInt(AMSupport.MAX_MS), AMSupport.PERFORMANCE, AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD));
+		addMetric(new Metric(AMSupport.REQ_PER_MIN, rand.nextInt(AMSupport.MAX_RAND_VALUE), "requests", 0, 0, AMSupport.MIN_SEC_EPOCH + rand.nextInt(AMSupport.MAX_MS), AMSupport.PERFORMANCE, AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD));
 		addMetric(new Metric(AMSupport.CPU_LOAD, rand.nextInt(AMSupport.MAX_RAND_VALUE), "%", AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD, AMSupport.MIN_SEC_EPOCH + rand.nextInt(AMSupport.MAX_MS), AMSupport.RATE, AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD));
 		addMetric(new Metric(AMSupport.DISK_IO, rand.nextInt(AMSupport.MAX_RAND_VALUE), "%", AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD, AMSupport.MIN_SEC_EPOCH + rand.nextInt(AMSupport.MAX_MS), AMSupport.RATE, AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD));
 		addMetric(new Metric(AMSupport.OS_MEM_USAGE,  rand.nextInt(AMSupport.MAX_RAND_VALUE), "%", AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD, AMSupport.MIN_SEC_EPOCH + rand.nextInt(AMSupport.MAX_MS), AMSupport.RATE, AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD));
@@ -190,10 +190,10 @@ public class JavaSystem extends System {
 	@Override
 	public void niceOutput() {
 		super.niceOutput();
-		printStringWithMetricIndex("| # of Processes: %25d |", "  %22s: %3d %-10s - %10s |\n", processes.size(),4);
-		printStringWithMetricIndex("|    # Error: %29d |", "  %22s: %3d %-10s - %10s |\n", countProcessesWithState(AMSupport.ERROR_STATE),5);
-		printStringWithMetricIndex("|    # Warning: %27d |", "  %22s: %3d %-10s - %10s |\n", countProcessesWithState(AMSupport.WARNING_STATE),6);
-		printStringWithMetricIndex("|    # Ok: %32d |", "  %22s: %3d %-10s - %10s |\n", countProcessesWithState(AMSupport.OK_STATE),7);
+		printStringWithMetricIndex("| # of Processes: %25d |", processes.size(),4);
+		printStringWithMetricIndex("|    # Error: %29d |", countProcessesWithState(AMSupport.ERROR_STATE),5);
+		printStringWithMetricIndex("|    # Warning: %27d |", countProcessesWithState(AMSupport.WARNING_STATE),6);
+		printStringWithMetricIndex("|    # Ok: %32d |", countProcessesWithState(AMSupport.OK_STATE),7);
 		super.niceOutputBottom();
 	}
 	

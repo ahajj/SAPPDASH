@@ -6,7 +6,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import org.junit.rules.Timeout;
+
 import com.appmonitor.support.AMSupport;
+import com.appmonitor.support.SystemsRecoveryException;
 import com.appmonitor.systems.DatabaseSystem;
 import com.appmonitor.systems.HTML5System;
 import com.appmonitor.systems.JavaSystem;
@@ -24,9 +27,23 @@ public class AppMonitorMain {
 		// main function for the app monitor
 		
 		// Post Condition 1: Generate the Systems
-		systems = generateListOfSystems(numberOfSystems);
-		
-
+	
+		// Try reading the systems from the back up file
+		try
+		{
+			systems = AMSupport.readSystemsFromFile();			
+		}
+		catch(SystemsRecoveryException sre)
+		{
+			
+			// if we've entered this section then there was a problem reading the systems from the file
+			// instead we will generate a fresh list
+			// and print the message
+			
+			sre.messageToConsole();
+			
+			systems = generateListOfSystems(numberOfSystems);
+		}
 
 	    final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 	    executorService.scheduleAtFixedRate(AppMonitorMain::trackSystems, 0, AMSupport.MS_PER_REFRESH, TimeUnit.MILLISECONDS);
@@ -39,16 +56,9 @@ public class AppMonitorMain {
 		java.lang.System.out.println("************************ Refreshing ************************");
 		// Post Condition 2: Analysis of each System is on the console
 		for (System system: systems)
-		{
-			// Treat Java apps as special.  We only want to print out the full list of metrics if
-			// the state is not OK...otherwise it will clutter the console
-//			if (system instanceof JavaSystem && system.getState().equals(AMSupport.OK_STATE))
-//			{
-//				java.lang.System.out.println(((JavaSystem) system).generateSimpleSystemStats());
-//			}
-//			else {
-//				java.lang.System.out.println(system.generateSystemStats());
-//			}
+		{	
+			// read in the system
+
 			
 			// for this version of the application we are showing a nice version of the application to the console
 			// then a more detailed, complete version will be shown in the log
@@ -59,7 +69,21 @@ public class AppMonitorMain {
 			// Generate the state of the system based on the metrics and processes (when applicable)
 			system.generateState();
 			
+			// Also log the full details of the system metrics & processes to the log file
+			
+			// Treat Java apps as special.  We only want to print out the full list of metrics if
+			// the state is not OK...otherwise it will clutter the console
+			if (system instanceof JavaSystem && system.getState().equals(AMSupport.OK_STATE))
+			{
+				AMSupport.appendToLogFile(((JavaSystem) system).generateSimpleSystemStats());
+			}
+			else {
+				AMSupport.appendToLogFile(system.generateSystemStats());
+			}
+			
 		}
+		
+		AMSupport.writeSystemsToFile(systems);
 	}
 
 	// ideally, this would be a server querying systems it is set to monitor
@@ -69,9 +93,22 @@ public class AppMonitorMain {
 	{
 		List<System> systems = new ArrayList<System>();
 		
+		java.lang.System.out.println("Generating Systems...");
+		
 		// this list isn't totally random.  It will cycle through java, html5 and database
 		for (int c = 0; c < i; c++)
 		{
+			// add some nice output while generating
+			for (int k =0; k < 3; k++)
+			{
+				java.lang.System.out.println("*");
+				try {
+					TimeUnit.MILLISECONDS.sleep(AMSupport.MS_PER_REFRESH);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			
 			System system;
 			
 			switch (c%3) {
@@ -103,6 +140,10 @@ public class AppMonitorMain {
 			}
 			// Generate the state of the system based on the metrics and processes (when applicable)
 			system.generateState();
+			
+			// Print to the console the newly created System!
+			java.lang.System.out.println("Generated System: " + system.getId() + "!");
+			
 			systems.add(system);
 		}
 		

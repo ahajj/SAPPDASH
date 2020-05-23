@@ -1,11 +1,12 @@
 package com.appmonitor.systems.processes;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.appmonitor.support.AMSupport;
 import com.appmonitor.systems.metrics.Metric;
 
-public class Process {
+public class Process implements Serializable {
 
 	private String processId;
 	private List<Metric> metrics;

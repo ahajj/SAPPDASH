@@ -1,5 +1,17 @@
 package com.appmonitor.support;
 
+import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+
 public abstract class AMSupport {
 	
 	
@@ -64,6 +76,10 @@ public abstract class AMSupport {
 	// number of milliseconds between refreshs
 	public static final int MS_PER_REFRESH = 1000;
 	
+	// the following are names of files used
+	public static final String LOG_FILE = "ApplicationMonitorLog.log";
+	private static final String SYSTEM_BACKUP_FILE = "SystemBackup.txt";
+	
 	public static String getStatusForState(String state) {
 		switch (state) {
 		case OK_STATE: 
@@ -90,5 +106,124 @@ public abstract class AMSupport {
 			return WARNING_RANGE;
 		}
 		return WITHIN_RANGE;
+	}
+	
+	// Function to append the given string the log file
+	public static void appendToLogFile(String string) { 
+		
+		BufferedWriter bw = null;
+		try {
+			bw = new BufferedWriter(new FileWriter(LOG_FILE, true)); 
+			bw.write(string);  
+			bw.newLine(); 
+			bw.flush();
+		} 
+		catch (IOException e) {
+			System.out.println("Error writing to the log file...");
+			e.printStackTrace();
+		} 
+		finally { 
+			if (bw != null) 
+				try {
+					bw.close();
+				} 
+			catch (IOException e) {
+				e.printStackTrace();
+			}
+		} 
+	} 
+	
+	// function to backup the list of systems
+	public static void writeSystemsToFile(List<com.appmonitor.systems.System> systems)
+	{
+	    FileOutputStream file = null;
+	    ObjectOutputStream out = null; 
+		
+		try {
+		    file = new FileOutputStream(SYSTEM_BACKUP_FILE);
+		    out = new ObjectOutputStream(file);  
+		    
+		    // write the list of systems to the output file
+		    out.writeObject(systems); 
+		} catch(Exception ex) {
+		    ex.printStackTrace();
+		}
+		finally {
+        	// close both output streams in the finally block assumming they are not null
+			if (out != null) 
+				try {
+					out.close();
+				} 
+			catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			if (file != null) 
+				try {
+					file.close();
+				} 
+			catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	// read the list of systems from the backedup file
+	public static List<com.appmonitor.systems.System> readSystemsFromFile() throws SystemsRecoveryException
+	{
+		List<com.appmonitor.systems.System> systems = new ArrayList<com.appmonitor.systems.System>();
+	       
+		// try reading the file...
+		// if it isn't there then we need to generate one.
+		
+		FileInputStream file = null;
+		ObjectInputStream in = null;
+        try
+        {    
+            // Create the file input stream
+            file = new FileInputStream(SYSTEM_BACKUP_FILE); 
+            in = new ObjectInputStream(file); 
+              
+            // read the list of systems
+            systems = (List<com.appmonitor.systems.System>)in.readObject(); 
+              
+        } 
+        // throw a SystemsRecoveryException if the file is not found, or the an IOException occures
+        // this will signal the caller to create a list of systems
+        catch (FileNotFoundException fnfe)
+        {
+        	throw new SystemsRecoveryException();
+        }
+          
+        catch(IOException ex) 
+        { 
+        	throw new SystemsRecoveryException();
+        } 
+          
+        catch(ClassNotFoundException ex) 
+        { 
+            java.lang.System.out.println("ClassNotFoundException is caught"); 
+        } 
+        finally
+        {
+        	// close both input streams in the finally block assumming they are not null
+			if (in != null) 
+				try {
+					in.close();
+				} 
+			catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			if (file != null) 
+				try {
+					file.close();
+				} 
+			catch (IOException e) {
+				e.printStackTrace();
+			}
+        }
+        
+        return systems;
 	}
 }
