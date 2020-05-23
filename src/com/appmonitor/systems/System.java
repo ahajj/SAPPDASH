@@ -2,6 +2,7 @@ package com.appmonitor.systems;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import com.appmonitor.support.AMSupport;
 import com.appmonitor.systems.metrics.Metric;
@@ -169,5 +170,61 @@ public abstract class System {
 		return outputString;
 	}
 	
+	public void niceOutput()
+	{
+		//String niceOutput = "";
+		java.lang.System.out.println(" _____________________________________");	
+		java.lang.System.out.printf("/ %-35s \\ \n", id);		
+		java.lang.System.out.println("|_____________________________________|____________________________________________________________");
+		java.lang.System.out.printf("|  Type: %34s |%54s|\n", type, "");
+		java.lang.System.out.printf("| Account: %32s |  %22s: %10s  %15s |\n", account, "Metric", "Value", "State");
+		java.lang.System.out.printf("| State: %34s |%54s|\n", state, "");
+		printStringWithMetricIndex("| # of Metrics: %27d |", "  %22s: %3d %-10s - %10s |\n", metrics.size(),0);
+		printStringWithMetricIndex("|    # Error: %29d |", "  %22s: %3d %-10s - %10s |\n", countMetricsForState(AMSupport.ERROR_STATE), 1 );
+		printStringWithMetricIndex("|    # Warning: %27d |", "  %22s: %3d %-10s - %10s |\n", countMetricsForState(AMSupport.WARNING_STATE), 2 );
+		printStringWithMetricIndex("|    # Ok: %32d |", "  %22s: %3d %-10s - %10s |\n", countMetricsForState(AMSupport.OK_STATE), 3 );
+		
+		
+	}
+	
+	public void printStringWithMetricIndex(String string, String metricString, int firstParam, int mIndex)
+	{
+		if(metrics.size() > mIndex)
+		{
+			java.lang.System.out.printf(string + metricString, firstParam, metrics.get(mIndex).getName(), metrics.get(mIndex).getValue(), metrics.get(mIndex).getUnit(), metrics.get(mIndex).getState() );
+		}
+		else
+		{
+			java.lang.System.out.printf(string + "%54s|\n" , firstParam, "");
+		}
+	}
+	
+	public void niceOutputBottom() {
+
+		java.lang.System.out.println("\\___________________________________________/\\_____________________________________________________/");
+	}
+	
+	public int countMetricsForState(String state)
+	{
+		int count = 0;
+		for (Metric metric: metrics) {
+			if (metric.getState().contentEquals(state))
+			{
+				count++;
+			}
+		}
+		
+		return count;
+	}
+	
+	public void simulateUpdatingMetrics()
+	{
+		Random rand = new Random();
+		// loop through all the metrics and update their values
+		for (Metric metric: metrics)
+		{
+			metric.setValue(rand.nextInt(AMSupport.MAX_RAND_VALUE));
+		}
+	}
 
 }

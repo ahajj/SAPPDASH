@@ -61,6 +61,9 @@ public abstract class AMSupport {
 	// max number of ms from MIN_SEC_EPOCH 
 	public static final int MAX_MS = 3500000;
 	
+	// number of milliseconds between refreshs
+	public static final int MS_PER_REFRESH = 1000;
+	
 	public static String getStatusForState(String state) {
 		switch (state) {
 		case OK_STATE: 

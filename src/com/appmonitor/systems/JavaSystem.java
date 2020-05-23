@@ -187,6 +187,29 @@ public class JavaSystem extends System {
 		addMetric(new Metric(AMSupport.BUSY_THREADS, rand.nextInt(AMSupport.MAX_RAND_VALUE), "", AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD, AMSupport.MIN_SEC_EPOCH + rand.nextInt(AMSupport.MAX_MS), AMSupport.RATE, AMSupport.WARNING_THRESHOLD, AMSupport.ERROR_THRESHOLD));
 	}
 	
+	@Override
+	public void niceOutput() {
+		super.niceOutput();
+		printStringWithMetricIndex("| # of Processes: %25d |", "  %22s: %3d %-10s - %10s |\n", processes.size(),4);
+		printStringWithMetricIndex("|    # Error: %29d |", "  %22s: %3d %-10s - %10s |\n", countProcessesWithState(AMSupport.ERROR_STATE),5);
+		printStringWithMetricIndex("|    # Warning: %27d |", "  %22s: %3d %-10s - %10s |\n", countProcessesWithState(AMSupport.WARNING_STATE),6);
+		printStringWithMetricIndex("|    # Ok: %32d |", "  %22s: %3d %-10s - %10s |\n", countProcessesWithState(AMSupport.OK_STATE),7);
+		super.niceOutputBottom();
+	}
+	
+	protected int countProcessesWithState(String state)
+	{
+		int count = 0;
+		for (Process process: processes) {
+			if (process.getState().contentEquals(state))
+			{
+				count++;
+			}
+		}
+		
+		return count;
+	}
+	
 	
 	
 }

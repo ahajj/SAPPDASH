@@ -33,6 +33,10 @@ public class Metric {
 	
 	public void setValue(long value) {
 		this.value = value;
+		
+		// update the timestamp on the metric
+		this.timestamp = timestamp + AMSupport.MS_PER_REFRESH;
+		
 		this.generateStateBasedOnValueAndThresholds();
 	}
 	
@@ -110,5 +114,10 @@ public class Metric {
 		output += "\n	**** Analysis: " + ((warningThreshold == 0 && errorThreshold == 0) ? (value + " " + unit + " " + name) : AMSupport.getMessageForValueWithThresholds(value, warningThreshold, errorThreshold)) + "	****\n\n";
 		
 		return output;
+	}
+
+	public String getUnit() {
+		// TODO Auto-generated method stub
+		return unit;
 	}
 }

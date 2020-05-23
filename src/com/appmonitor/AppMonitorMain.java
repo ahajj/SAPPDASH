@@ -2,6 +2,9 @@ package com.appmonitor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import com.appmonitor.support.AMSupport;
 import com.appmonitor.systems.DatabaseSystem;
@@ -12,30 +15,51 @@ import com.appmonitor.systems.System;
 public class AppMonitorMain {
 	
 	// This sets the number of systems generated to 6.
-	private final static int numberOfSystems = 6;
+	private final static int numberOfSystems = 3;
+	
+	private static List<System> systems;
 
 	public static void main(String[] args) {
 		
 		// main function for the app monitor
 		
 		// Post Condition 1: Generate the Systems
-		List<System> systems = generateListOfSystems(numberOfSystems);
+		systems = generateListOfSystems(numberOfSystems);
 		
+
+
+	    final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+	    executorService.scheduleAtFixedRate(AppMonitorMain::trackSystems, 0, AMSupport.MS_PER_REFRESH, TimeUnit.MILLISECONDS);
+		
+	}
+	
+	public static void trackSystems()
+	{
+
+		java.lang.System.out.println("************************ Refreshing ************************");
 		// Post Condition 2: Analysis of each System is on the console
 		for (System system: systems)
 		{
 			// Treat Java apps as special.  We only want to print out the full list of metrics if
 			// the state is not OK...otherwise it will clutter the console
-			if (system instanceof JavaSystem && system.getState().equals(AMSupport.OK_STATE))
-			{
-				java.lang.System.out.println(((JavaSystem) system).generateSimpleSystemStats());
-			}
-			else {
-				java.lang.System.out.println(system.generateSystemStats());
-			}
+//			if (system instanceof JavaSystem && system.getState().equals(AMSupport.OK_STATE))
+//			{
+//				java.lang.System.out.println(((JavaSystem) system).generateSimpleSystemStats());
+//			}
+//			else {
+//				java.lang.System.out.println(system.generateSystemStats());
+//			}
+			
+			// for this version of the application we are showing a nice version of the application to the console
+			// then a more detailed, complete version will be shown in the log
+			system.niceOutput();
+			
+			system.simulateUpdatingMetrics();
+			
+			// Generate the state of the system based on the metrics and processes (when applicable)
+			system.generateState();
 			
 		}
-
 	}
 
 	// ideally, this would be a server querying systems it is set to monitor

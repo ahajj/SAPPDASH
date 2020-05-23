@@ -41,4 +41,10 @@ public class HTML5System extends System {
 		
 	}
 	
+	@Override
+	public void niceOutput() {
+		super.niceOutput();
+		super.niceOutputBottom();
+	}
+	
 }
