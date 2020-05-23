@@ -1,6 +1,7 @@
 package com.appmonitor.support;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -8,6 +9,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -226,4 +228,18 @@ public abstract class AMSupport {
         
         return systems;
 	}
+	
+	// clear the log file
+	 public static void clearLogFile() {
+		 
+		 PrintWriter writer;
+		 try {
+			 writer = new PrintWriter(new File(LOG_FILE));
+			 writer.print("");
+			 writer.close();
+		} 
+		catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	 }
 }

@@ -26,6 +26,9 @@ public class AppMonitorMain {
 		
 		// main function for the app monitor
 		
+		// First, clear the log so it is fresh for each runtime.
+		AMSupport.clearLogFile();
+		
 		// Post Condition 1: Generate the Systems
 	
 		// Try reading the systems from the back up file
