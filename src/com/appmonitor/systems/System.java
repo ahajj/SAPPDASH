@@ -1,7 +1,5 @@
 package com.appmonitor.systems;
 
-import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +11,10 @@ import com.appmonitor.systems.metrics.Metric;
 
 public abstract class System implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	// private members shared across all System types
 	private String id;
 	private String type;
@@ -174,6 +176,7 @@ public abstract class System implements Serializable {
 		return outputString;
 	}
 	
+	// Creates a nicer looking output in the console
 	public void niceOutput()
 	{
 		//String niceOutput = "";
@@ -191,6 +194,9 @@ public abstract class System implements Serializable {
 		
 	}
 	
+	// This function will check to see if there is a metric in the system list's index
+	// and will print it in the second 'box' of the nice output
+	// and will also print the average value for that metric
 	public void printStringWithMetricIndex(String string, int firstParam, int mIndex)
 	{
 		if(metrics.size() > mIndex)
@@ -203,11 +209,13 @@ public abstract class System implements Serializable {
 		}
 	}
 	
+	// The bottomsection of the nice output
 	public void niceOutputBottom() {
 
 		java.lang.System.out.println("\\___________________________________________/\\_____________________________________________________/\\_______/");
 	}
 	
+	// Run through all the metrics and count the number that have the given state
 	public int countMetricsForState(String state)
 	{
 		int count = 0;
@@ -221,6 +229,8 @@ public abstract class System implements Serializable {
 		return count;
 	}
 	
+	// This function assigns a random value to the metric.
+	// This simulates having a live system that constantly has the metric updating
 	public void simulateUpdatingMetrics()
 	{
 		Random rand = new Random();

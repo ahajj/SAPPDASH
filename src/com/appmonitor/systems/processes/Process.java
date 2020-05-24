@@ -8,6 +8,10 @@ import com.appmonitor.systems.metrics.Metric;
 
 public class Process implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String processId;
 	private List<Metric> metrics;
 	private String state;

@@ -11,6 +11,10 @@ import com.appmonitor.systems.processes.Process;
 
 public class JavaSystem extends System {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String application;
 	private List<Process> processes;
 	

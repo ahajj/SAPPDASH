@@ -8,6 +8,10 @@ import com.appmonitor.systems.metrics.Metric;
 
 public class DatabaseSystem extends System {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String dbsystem;
 	
 	public DatabaseSystem(String type, String account, List<Metric> metrics, String dbsystem) {

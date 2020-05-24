@@ -9,6 +9,10 @@ import com.appmonitor.systems.metrics.Metric;
 public class HTML5System extends System {
 	
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String application;
 	
 	public HTML5System(String type, String account, String application) {

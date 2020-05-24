@@ -11,6 +11,10 @@ import com.appmonitor.support.AMSupport;
 
 public class Metric implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String name;
 	private String state;
 	private long value;

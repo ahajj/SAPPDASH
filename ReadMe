@@ -29,78 +29,105 @@ Java Systems have a list of Processes which also have metrics.
 The abstract class AMSupport contains a number of supporting fields and functions.  These include:
 	Static final variables (possible system states, warning and error thresholds, metric names...etc.  basically the onestop shop for numbers/text that are used across the application so that if they need to be changed it will only have to be once) 
 
-Upon running AppMonitorMain (under com.appmonitor), the application will generate a number of systems, along with pseudo-randomly generated metric values.
+Upon running AppMonitorMain (under com.appmonitor), the application will first attempt to recover the systems from a previous run.  If it is unable to do so, it will generate a number of systems, along with pseudo-randomly generated metric values.
 
-**Note: Currently the application is set to generate 6 systems (2 Java Systems, 2 Database Systems and 2 HTML5 Systems).  This can be changed in AppMonitorMain by changing 'numberOfSystems'
+**Note: Currently the application is set to generate 3 systems (1 Java Systems, 1 Database Systems and 1 HTML5 Systems).  This can be changed in AppMonitorMain by changing 'numberOfSystems'
 
 After generating the systems/metrics, the application attempts to analyze the systems.
 	As of right now, the analyzation is fairly simple.  It looks at the metric value and checks to see if it is above the error and/or warning thresholds.
 	Above Warning Threshold generates a message stating the application is unhealthy
 	Above Error Threshold generates a message stating the application should be restarted.
+^ The above information is shown in a nice output to console, as well as a detailed log file (ApplicationMonitorLog.log in the project directory)
 
-SAPPDASH will then print it's simple analysis to the console.  It will only print all the Java metrics and processes if the Java System is not healthy.
+SAPPDASH will then print it's analysis to the console.  After printing the analysis the console, SAPPDASH will create a snapshot of the systems and metrics that can be used in the next run to continue monitoring the same systems
 
-Planned updates would be:
-	Updating the metric values periodically while the application is running (to simulate getting metrics from a live system)
-	Enhancing SAPPDASH to analyze not just the current value, but also past values of metrics & systems 
+SAPPDASH keeps a record the last 500 metric values per metric.  These values are then used to calculate the average metric value.
 
 Unit testing is currently being incorporated in and can be found under 'test'.  The test package structure mirrors src.  These unit tests are used to test the logic behind setting states/statusus
 
-The following is a sample output from the system.  The HTML5 application was given a state of 'Error' as it's second metric's value is above the error threshold:
+The following is a sample output from the system:  
 
-HTML5 Application: html5account16applicationName16
-		Account: account16
-		State: Error
+ _____________________________________
+/ javaaccount0applicationName0        \ 
+|_____________________________________|______________________________________________________________________
+|  Type:                               java |                                                      |        |
+| Account:                         account0 |                  Metric:      Value            State | Average|
+| State:                              Error |                                                      |        |
+| # of Metrics:                           8 |         Used Disc Space:  89 %          -         Ok |  44.71 |
+|    # Error:                             1 |     Requests per Minute:  43 requests   -         Ok |  52.81 |
+|    # Warning:                           0 |                CPU Load:  26 %          -         Ok |  48.63 |
+|    # Ok:                                7 |                Disk I/O:  56 %          -         Ok |  52.85 |
+| # of Processes:                         1 |         OS Memory Usage:  45 %          -         Ok |  54.54 |
+|    # Error:                             1 |       Heap Memory Usage:  98 %          -      Error |  47.63 |
+|    # Warning:                           0 |   Average Response Time:  52 ms         -         Ok |  51.40 |
+|    # Ok:                                0 |            Busy Threads:  30            -         Ok |  52.74 |
+\___________________________________________/\_____________________________________________________/\_______/
+ _____________________________________
+/ html5account1applicationName1       \ 
+|_____________________________________|______________________________________________________________________
+|  Type:                              html5 |                                                      |        |
+| Account:                         account1 |                  Metric:      Value            State | Average|
+| State:                              Error |                                                      |        |
+| # of Metrics:                           2 |          HTML5 Metric 1:  43 %          -      Error |  49.54 |
+|    # Error:                             2 |          HTML5 Metric 2:  88 %          -      Error |  49.90 |
+|    # Warning:                           0 |                                                      |        |
+|    # Ok:                                0 |                                                      |        |
+\___________________________________________/\_____________________________________________________/\_______/
+ _____________________________________
+/ databaseaccount2applicationName2    \ 
+|_____________________________________|______________________________________________________________________
+|  Type:                           database |                                                      |        |
+| Account:                         account2 |                  Metric:      Value            State | Average|
+| State:                                 Ok |                                                      |        |
+| # of Metrics:                           2 |                CPU Load:  45 %          -         Ok |  51.31 |
+|    # Error:                             0 |                Disk I/O:  20 %          -         Ok |  44.63 |
+|    # Warning:                           0 |                                                      |        |
+|    # Ok:                                2 |                                                      |        |
+\___________________________________________/\_____________________________________________________/\_______/
+
+
+Opening the more detailed log (ApplicationMonitorLog.log) will show something like the following:
+
+
+HTML5 Application: html5account1applicationName1
+		Account: account1
+		State: Warning
 		Type: html5
 	Metrics: 
 	Metric 'HTML5 Metric 1': 
-		State: Ok...Current Value: 1 %
+		State: Warning...Current Value: 25 %
 		Min Value: 20 %...Max Value: 30 %
 		Warning Threshold: 20 %...Error Threshold: 30 %
-		Timestamp: 2020 05 18 22:32:33
-		Output: Healthy - 'HTML5 Metric 1' at 1 %
-	**** Analysis: Metric Value in Acceptable Range.	****
+		Timestamp: 2020 05 18 23:02:32
+		Output: Unhealthy - 'HTML5 Metric 1' at 25 %
+	**** Analysis: Warning! Metric Value is slightly above the Acceptable Range!	****
 
 	Metric 'HTML5 Metric 2': 
-		State: Error...Current Value: 34 %
+		State: Ok...Current Value: 4 %
 		Min Value: 20 %...Max Value: 30 %
 		Warning Threshold: 20 %...Error Threshold: 30 %
-		Timestamp: 2020 05 18 22:43:07
-		Output: Restart Recommended - 'HTML5 Metric 2' at 34 %
-	**** Analysis: Error! Metric Value is greatly above the Acceptable Range!	****
+		Timestamp: 2020 05 18 22:55:44
+		Output: Healthy - 'HTML5 Metric 2' at 4 %
+	**** Analysis: Metric Value in Acceptable Range.	****
 
 
-Database Application: databaseaccount17applicationName17
-		Account: account17
-		State: Ok
+Database Application: databaseaccount2applicationName2
+		Account: account2
+		State: Error
 		Type: database
 	Metrics: 
 	Metric 'CPU Load': 
-		State: Ok...Current Value: 59 %
+		State: Ok...Current Value: 30 %
 		Min Value: 90 %...Max Value: 95 %
 		Warning Threshold: 90 %...Error Threshold: 95 %
-		Timestamp: 2020 05 18 22:45:32
-		Output: Healthy - 'CPU Load' at 59 %
+		Timestamp: 2020 05 18 22:52:41
+		Output: Healthy - 'CPU Load' at 30 %
 	**** Analysis: Metric Value in Acceptable Range.	****
 
 	Metric 'Disk I/O': 
-		State: Ok...Current Value: 65 %
+		State: Error...Current Value: 98 %
 		Min Value: 90 %...Max Value: 95 %
 		Warning Threshold: 90 %...Error Threshold: 95 %
-		Timestamp: 2020 05 18 22:20:02
-		Output: Healthy - 'Disk I/O' at 65 %
-	**** Analysis: Metric Value in Acceptable Range.	****
-
-
-Java Application: javaaccount18applicationName18
-		Account: account18
-		State: Ok
-		Type: java
-	Metrics: 
-	Metric 'Used Disc Space': 
-		State: Ok...Current Value: 42 %
-		Min Value: 90 %...Max Value: 95 %
-		Warning Threshold: 90 %...Error Threshold: 95 %
-		Timestamp: 2020 05 18 23:15:14
-		Output: Healthy - 'Used Disc Space' at 42 %
-	**** Analysis: Metric Value in Acceptable Range.	****
+		Timestamp: 2020 05 18 22:44:46
+		Output: Restart Recommended - 'Disk I/O' at 98 %
+	**** Analysis: Error! Metric Value is greatly above the Acceptable Range!	****

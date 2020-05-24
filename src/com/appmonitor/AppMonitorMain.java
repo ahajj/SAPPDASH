@@ -6,8 +6,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.rules.Timeout;
-
 import com.appmonitor.support.AMSupport;
 import com.appmonitor.support.SystemsRecoveryException;
 import com.appmonitor.systems.DatabaseSystem;
@@ -22,18 +20,17 @@ public class AppMonitorMain {
 	
 	private static List<System> systems;
 
+	// main function for the app monitor
 	public static void main(String[] args) {
-		
-		// main function for the app monitor
-		
+				
 		// First, clear the log so it is fresh for each runtime.
 		AMSupport.clearLogFile();
 		
-		// Post Condition 1: Generate the Systems
-	
-		// Try reading the systems from the back up file
+		// Assignment 2 - Post Condition 4 & 5: System Recovery and Handle New Systems (Exception Handling)
 		try
 		{
+			// Attempt to read serialized systems from a file.
+			// throws SystemsRecoveryException if the file is not found
 			systems = AMSupport.readSystemsFromFile();			
 		}
 		catch(SystemsRecoveryException sre)
@@ -42,12 +39,14 @@ public class AppMonitorMain {
 			// if we've entered this section then there was a problem reading the systems from the file
 			// instead we will generate a fresh list
 			// and print the message
-			
 			sre.messageToConsole();
 			
 			systems = generateListOfSystems(numberOfSystems);
 		}
 
+		// This next bit is done to simulate getting status & metric value updates MS_PER_REFRESH milliseconds
+		// it is a scheduled executor that runs trackSystems() which will set a new value on each metric
+		// it also updates states
 	    final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 	    executorService.scheduleAtFixedRate(AppMonitorMain::trackSystems, 0, AMSupport.MS_PER_REFRESH, TimeUnit.MILLISECONDS);
 		
@@ -57,21 +56,22 @@ public class AppMonitorMain {
 	{
 
 		java.lang.System.out.println("************************ Refreshing ************************");
-		// Post Condition 2: Analysis of each System is on the console
+		// Assignment 2 - Post Condition 1: Advanced Visual Monitoring
 		for (System system: systems)
 		{	
-			// read in the system
-
-			
 			// for this version of the application we are showing a nice version of the application to the console
 			// then a more detailed, complete version will be shown in the log
 			system.niceOutput();
 			
+			// randomly generates a new value for each metric on the system
+			// also will track up to the last 500 values per metric in order to keep a history
+			// to use when calculating the average
 			system.simulateUpdatingMetrics();
 			
 			// Generate the state of the system based on the metrics and processes (when applicable)
 			system.generateState();
 			
+			// Assignment 2 - Post Condition 3: Detailed Log file
 			// Also log the full details of the system metrics & processes to the log file
 			
 			// Treat Java apps as special.  We only want to print out the full list of metrics if
@@ -86,6 +86,9 @@ public class AppMonitorMain {
 			
 		}
 		
+		// This will 'backup' the systems
+		// next time AppMonitorMain runs it will try to recover them
+		// Assignment 2 - Post Conditiion 2: Serialize Systems
 		AMSupport.writeSystemsToFile(systems);
 	}
 
@@ -104,6 +107,7 @@ public class AppMonitorMain {
 			// add some nice output while generating
 			for (int k =0; k < 3; k++)
 			{
+				// slow things down a little...wait three seconds and print three *s to the console between systems
 				java.lang.System.out.println("*");
 				try {
 					TimeUnit.MILLISECONDS.sleep(AMSupport.MS_PER_REFRESH);
