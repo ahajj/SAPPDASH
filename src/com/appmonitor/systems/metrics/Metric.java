@@ -39,6 +39,10 @@ public class Metric implements Serializable {
 		return value;
 	}
 	
+	public long getTimestamp() {
+		return timestamp;
+	}
+	
 	public void setValue(long value) {
 		
 		// add the value to the values list
@@ -157,5 +161,11 @@ public class Metric implements Serializable {
 		}
 		
 		return toGo/values.size();
+	}
+	
+	// this function is only used in the unit tests
+	protected void clearHistoricalValues()
+	{
+		this.values.clear();
 	}
 }

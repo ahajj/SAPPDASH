@@ -46,5 +46,41 @@ public class JavaSystemTest {
 	
 	}
 	
+	@Test
+	void testCountProcessState() {
+		// create the JavaSystem
+		
+		JavaSystem js = new JavaSystem("test1", "test2", "test4");
+		js.setState(AMSupport.OK_STATE);
+		
+		// add one process at a time to control the test
+
+		js.addProcess(new Process("test1"+"_process1",AMSupport.OK_STATE, new ArrayList<Metric>()));
+	
+		// now add in two warning processes
+		List<Metric> metrics = new ArrayList<Metric>();
+		metrics.add(new Metric("metric1", 50l, "%", 45, 60, 23442433, "rate", 50, 70));
+		js.addProcess(new Process("test1"+"_process1", metrics));
+		js.addProcess(new Process("test1"+"_process5", metrics));
+
+	
+		// now add in three critical processes
+		List<Metric> metrics2 = new ArrayList<Metric>();
+		metrics2.add(new Metric("metric2", 65l, "%", 45, 60, 23442433, "rate", 50, 70));
+		js.addProcess(new Process("test1"+"_process1", metrics2));
+
+		js.addProcess(new Process("test1"+"_process3", metrics2));
+		js.addProcess(new Process("test1"+"_process4", metrics2));
+		
+		// Check that there is 1 OK process
+		Assert.assertTrue("There were actually " + js.countProcessesWithState(AMSupport.OK_STATE), js.countProcessesWithState(AMSupport.OK_STATE) == 1);
+		
+		// Check that there are 2 Warning processes
+		Assert.assertTrue("There were actually " + js.countProcessesWithState(AMSupport.WARNING_STATE), js.countProcessesWithState(AMSupport.WARNING_STATE) == 2);
+		// Check that there are 3 Error processes	
+		Assert.assertTrue("There were actually " + js.countProcessesWithState(AMSupport.ERROR_STATE), js.countProcessesWithState(AMSupport.ERROR_STATE) == 3);
+		
+	}
+	
 	
 }

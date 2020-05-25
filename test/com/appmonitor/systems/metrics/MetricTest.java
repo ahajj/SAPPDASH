@@ -60,6 +60,37 @@ public class MetricTest {
 			
 	}
 	
+	@Test
+	public void testAveragingMetricValues() {
+		testMetric.clearHistoricalValues();
+		
+		// get the current timestamp
+		long metTimestamp = testMetric.getTimestamp();
+		
+		// add 11 values and ensure that the average is generated properly
+		testMetric.setValue(40l);
+		testMetric.setValue(41l);
+		testMetric.setValue(42l);
+		testMetric.setValue(43l);
+		testMetric.setValue(44l);
+		testMetric.setValue(45l);
+		testMetric.setValue(46l);
+		testMetric.setValue(47l);
+		testMetric.setValue(48l);
+		testMetric.setValue(49l);
+		testMetric.setValue(50l);
+		
+		Assert.assertTrue("Average was actually: " + testMetric.getAverageValue(), testMetric.getAverageValue() == 45l);
+		
+		// now ensure that the timestamp is being updated properly
+		long curTimestamp = testMetric.getTimestamp();
+		
+		// the delta should be 11 * the refresh rate
+		long expDelta = AMSupport.MS_PER_REFRESH * 11;
+		Assert.assertTrue("Delta timestamps: " + (curTimestamp - metTimestamp), (curTimestamp - metTimestamp) == expDelta);
+		
+	}
+	
 	
 	
 }
