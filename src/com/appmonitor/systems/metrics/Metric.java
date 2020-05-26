@@ -168,4 +168,9 @@ public class Metric implements Serializable {
 	{
 		this.values.clear();
 	}
+	
+	public List<Long> getValues()
+	{
+		return values;
+	}
 }

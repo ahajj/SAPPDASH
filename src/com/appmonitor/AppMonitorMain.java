@@ -54,14 +54,16 @@ public class AppMonitorMain {
 	
 	public static void trackSystems()
 	{
+		trackSystems(systems);
+	}
+	
+	public static void trackSystems(List<System> systems)
+	{
 
 		java.lang.System.out.println("************************ Refreshing ************************");
 		// Assignment 2 - Post Condition 1: Advanced Visual Monitoring
 		for (System system: systems)
 		{	
-			// for this version of the application we are showing a nice version of the application to the console
-			// then a more detailed, complete version will be shown in the log
-			system.niceOutput();
 			
 			// randomly generates a new value for each metric on the system
 			// also will track up to the last 500 values per metric in order to keep a history
@@ -70,6 +72,10 @@ public class AppMonitorMain {
 			
 			// Generate the state of the system based on the metrics and processes (when applicable)
 			system.generateState();
+			
+			// for this version of the application we are showing a nice version of the application to the console
+			// then a more detailed, complete version will be shown in the log
+			system.niceOutput();
 			
 			// Assignment 2 - Post Condition 3: Detailed Log file
 			// Also log the full details of the system metrics & processes to the log file

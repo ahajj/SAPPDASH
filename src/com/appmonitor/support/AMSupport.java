@@ -80,7 +80,7 @@ public abstract class AMSupport {
 	
 	// the following are names of files used
 	public static final String LOG_FILE = "ApplicationMonitorLog.log";
-	private static final String SYSTEM_BACKUP_FILE = "SystemBackup.txt";
+	public static final String SYSTEM_BACKUP_FILE = "SystemBackup.txt";
 	
 	public static String getStatusForState(String state) {
 		switch (state) {
@@ -226,15 +226,43 @@ public abstract class AMSupport {
 			}
         }
         
+        // if there are no systems recovered
+        // then also throw SystemsRecoveryException()
+        // so the application knows to generate them
+        if (systems.size() == 0)
+        {
+        	throw new SystemsRecoveryException();
+        }
+        
         return systems;
 	}
 	
 	// clear the log file
 	 public static void clearLogFile() {
 		 
+		 eraseContentsOf(LOG_FILE);
+	 }
+	 
+	 public static void clearSystemsFile() {
+		 eraseContentsOf(SYSTEM_BACKUP_FILE);
+	 }
+	 
+	 // check if the passed in file is empty
+	 // used for testing purposes
+	 public static boolean isFileEmpty(String file) {
+		File newFile = new File(file); 
+		if (newFile.length() == 0)
+		{
+			 return true; 
+		}
+		return false;
+	 }
+	 
+	 private static void eraseContentsOf(String aFileName) {
+		 
 		 PrintWriter writer;
 		 try {
-			 writer = new PrintWriter(new File(LOG_FILE));
+			 writer = new PrintWriter(new File(aFileName));
 			 writer.print("");
 			 writer.close();
 		} 
@@ -242,4 +270,5 @@ public abstract class AMSupport {
 			e.printStackTrace();
 		}
 	 }
+
 }
