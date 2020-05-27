@@ -7,7 +7,7 @@ This project simulates monitoring a list of systems hosted on the SAP Cloud Plat
 
 All systems are pseudo-randomly generated, along with their metrics and processes (where applicable).
 
-The requirements are the postconditions of AppMonitorMain.main() - the long and short of it is that the system is to 1) generate systems and metrics and 2) print an analysis of these systems to the console
+The requirements are the postconditions of AppMonitorMain.main().  It is recommended to expand the console window in eclipse to show all three systems...it should autoscroll to the next system 'refresh'. 
 
 The design is AppMonitorMain   --->  System 
 				       ^
@@ -43,7 +43,11 @@ SAPPDASH will then print it's analysis to the console.  After printing the analy
 
 SAPPDASH keeps a record the last 500 metric values per metric.  These values are then used to calculate the average metric value.
 
-Unit testing is currently being incorporated in and can be found under 'test'.  The test package structure mirrors src.  These unit tests are used to test the logic behind setting states/statusus
+Unit testing can be found under 'test'.  The test package structure mirrors src.
+
+**Note** Running AMSupportNoJUnit can be done to test File I/O as well as acts as a nice demo of the system.
+
+-----  Sample Output -----
 
 The following is a sample output from the system:  
 
