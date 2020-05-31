@@ -2,10 +2,15 @@ package com.appmonitor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
+import java.util.StringTokenizer;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import com.appmonitor.analyzer.AnalyzingEngine;
+import com.appmonitor.analyzer.CurrentStateAnalyzer;
+import com.appmonitor.analyzer.HistoricalAnalyzer;
 import com.appmonitor.support.AMSupport;
 import com.appmonitor.support.SystemsRecoveryException;
 import com.appmonitor.systems.DatabaseSystem;
@@ -19,6 +24,8 @@ public class AppMonitorMain {
 	private final static int numberOfSystems = 3;
 	
 	private static List<System> systems;
+	
+	private static Scanner reader = new Scanner(java.lang.System.in);
 
 	// main function for the app monitor
 	public static void main(String[] args) {
@@ -26,6 +33,55 @@ public class AppMonitorMain {
 		// First, clear the log so it is fresh for each runtime.
 		AMSupport.clearLogFile();
 		
+		// check if the system should be run in continuous mod
+		if (promptAndCheckIfContinuousMode())
+		{
+			beginContinuousMode();
+		}
+		// otherwise it is sandbox mode
+		// prompt the user for the number of each system 
+		// then create those systems 
+		else {
+			 //Scanner reader = new Scanner(java.lang.System.in);
+			// reader.nextLine();
+			 String answer = reader.nextLine();
+			 java.lang.System.out.println("\nYou have selected--->" + answer);
+			 reader.close();
+			 
+			 StringTokenizer answerTokens = new StringTokenizer(answer);
+			 ArrayList<Integer> answerReturn = new ArrayList<Integer>();
+			 while (answerTokens.hasMoreTokens()){
+				 answerReturn.add(new Integer(answerTokens.nextToken()));
+			 }
+			 
+			 // answerReturn should have 4 integers
+			 List<System> systems = new ArrayList<System>();
+			 
+			 for (int i = 0; i < 3; i++)
+			 {
+				 // create the java (i=0), html5 (i=1) and database (i=2) systems
+				 systems.addAll(createSystemsList(i, answerReturn.get(i)));
+			 }
+			 
+			 // a bit strange to have two different ways to run the refresh
+			 // but given the point of this class is not thread sleeps/scheduled executor service
+			 // using both for different circumstances is easiest
+			 // ex: SES for continuous refreshing...thread.sleep for a given number
+			 for (int c =0; c< answerReturn.get(3); c++)
+			 {
+				 trackSystems(systems);
+				 try {
+					Thread.sleep(AMSupport.MS_PER_REFRESH);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			 }
+		}
+	}
+	
+	public static void beginContinuousMode()
+	{
 		// Assignment 2 - Post Condition 4 & 5: System Recovery and Handle New Systems (Exception Handling)
 		try
 		{
@@ -61,7 +117,17 @@ public class AppMonitorMain {
 	{
 
 		java.lang.System.out.println("************************ Refreshing ************************");
+		
+		// Create the AnalyzerEngines
+		AnalyzingEngine<CurrentStateAnalyzer> curStateAnalyzer = new AnalyzingEngine<CurrentStateAnalyzer>();
+		curStateAnalyzer.setAnalyzerSet(new CurrentStateAnalyzer());
+		
+		// Create the Historical Analyzer
+		AnalyzingEngine<HistoricalAnalyzer> hisAnalyzer = new AnalyzingEngine<HistoricalAnalyzer>();
+		hisAnalyzer.setAnalyzerSet(new HistoricalAnalyzer());
+		
 		// Assignment 2 - Post Condition 1: Advanced Visual Monitoring
+		
 		for (System system: systems)
 		{	
 			
@@ -90,12 +156,49 @@ public class AppMonitorMain {
 				AMSupport.appendToLogFile(system.generateSystemStats());
 			}
 			
+			// Analyze the current system state
+			curStateAnalyzer.analyze(system);
+			
+			// Analyze the historical system states
+			hisAnalyzer.analyze(system);
+			
 		}
 		
 		// This will 'backup' the systems
 		// next time AppMonitorMain runs it will try to recover them
 		// Assignment 2 - Post Conditiion 2: Serialize Systems
 		AMSupport.writeSystemsToFile(systems);
+	}
+	
+	public static boolean promptAndCheckIfContinuousMode()
+	{
+		// prompt the user to select either full on monitor mode
+		
+		// or sandbox mode
+		
+		 java.lang.System.out.print("Welcome to SAPPDASH! \nCurrently two modes are supported...\nContinuous will generate/recover systems and will run until the application is closed\nSandbox will allow you to input systems and time to monitor.");
+		 
+		 // just keep looping until valid input is received
+		 while(true)
+		 {
+			 java.lang.System.out.print("Please select the sytem mode - [C]ontinuous or [S]andbox:  ");
+			// Scanner reader = new Scanner(java.lang.System.in);
+			 String answer = reader.nextLine();
+			 java.lang.System.out.print("You have selected--->" + answer);
+			 
+			 switch (answer) {
+			 case("c"):
+			 case("C"):
+				 java.lang.System.out.print("Beginning Continuous mode!");
+				 reader.close();
+			 	 return true;
+			 case("s"):
+			 case("S"):
+				 java.lang.System.out.print("Beginning Sandbox Mode:\n Please enter the number of each system you would like to generate followed by the number of refreshes you would like to run.\n For example, creating 3 Java systems, 2 HTML5 systems and 1 Database system to be updated 45 times would look like '3 2 1 45' : ");
+				return false;
+			 }	 
+		 }
+
 	}
 
 	// ideally, this would be a server querying systems it is set to monitor
@@ -122,42 +225,61 @@ public class AppMonitorMain {
 				}
 			}
 			
-			System system;
+
 			
-			switch (c%3) {
-			// java system
-			case 0: 
-				system = new JavaSystem("java","account"+ c,"applicationName"+c);
-				break;
-			// html5 system
-			case 1:
-				system = new HTML5System("html5","account"+ c,"applicationName"+c);
-				break;
-			// database system
-			case 2:
-				system = new DatabaseSystem("database","account"+ c,"applicationName"+c);
-				break;
-			default:
-				system = new JavaSystem("java","account"+ c,"applicationName"+c);
-				break;
-			}
-			
-			// Generate the metrics for each system
-			// Polymorphism
-			system.generateMetrics();
-			
-			// Generate the processes for Java systems
-			// Downcasting
-			if (system instanceof JavaSystem) {
-				((JavaSystem) system).generateProcesses();
-			}
-			// Generate the state of the system based on the metrics and processes (when applicable)
-			system.generateState();
-			
-			// Print to the console the newly created System!
-			java.lang.System.out.println("Generated System: " + system.getId() + "!");
-			
-			systems.add(system);
+			systems.add(createSystem(c));
+		}
+		
+		return systems;
+	}
+	
+	public static System createSystem(int sysType)
+	{
+		System system;
+		
+		switch (sysType%3) {
+		// java system
+		case AMSupport.JAVA: 
+			system = new JavaSystem("java","account"+ sysType,"applicationName"+sysType);
+			break;
+		// html5 system
+		case AMSupport.HTML5:
+			system = new HTML5System("html5","account"+ sysType,"applicationName"+sysType);
+			break;
+		// database system
+		case AMSupport.DATABASE:
+			system = new DatabaseSystem("database","account"+ sysType,"applicationName"+sysType);
+			break;
+		default:
+			system = new JavaSystem("java","account"+ sysType,"applicationName"+sysType);
+			break;
+		}
+		
+		// Generate the metrics for each system
+		// Polymorphism
+		system.generateMetrics();
+		
+		// Generate the processes for Java systems
+		// Downcasting
+		if (system instanceof JavaSystem) {
+			((JavaSystem) system).generateProcesses();
+		}
+		// Generate the state of the system based on the metrics and processes (when applicable)
+		system.generateState();
+		
+		// Print to the console the newly created System!
+		java.lang.System.out.println("Generated System: " + system.getId() + "!");
+		
+		return system;
+	}
+	
+	public static List<System> createSystemsList(int sysType, int numberOfSystems)
+	{
+		List<System> systems = new ArrayList<System>();
+		
+		for (int i = 0; i < numberOfSystems; i++)
+		{
+			systems.add(createSystem(sysType));
 		}
 		
 		return systems;

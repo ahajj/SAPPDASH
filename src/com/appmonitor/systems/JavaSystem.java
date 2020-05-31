@@ -14,7 +14,7 @@ public class JavaSystem extends System {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 	private String application;
 	private List<Process> processes;
 	
@@ -95,11 +95,16 @@ public class JavaSystem extends System {
 		
 		super.generateState();
 		
+		
 		// can't get more severe than error or critical
 		if (this.getState().equals(AMSupport.CRITICAL_STATE) || this.getState().equals(AMSupport.ERROR_STATE) || this.getState().equals(AMSupport.UNKNOWN_STATE))
 		{
 			return;
 		}
+		// remove the last state in the list of historical states
+		// this is because generateState() in System.java pushes to the list
+		// but JavaSystems do additional processing
+		this.removePreviousState();
 		
 		String sysState = this.getState();
 		

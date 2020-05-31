@@ -54,6 +54,10 @@ public abstract class AMSupport {
 	public static final String WARNING_RANGE = "Warning! Metric Value is slightly above the Acceptable Range!";
 	public static final String ERROR_RANGE = "Error! Metric Value is greatly above the Acceptable Range!";
 	
+	// Different analysis metrics
+	public static final String ERROR_PERCENT = "Metric '%s' has errored out %.02f%% of the time.";
+	public static final String WARNING_PERCENT = "Metric '%s' has had warning %.02f%% of the time.";
+	
 	// Different type values
 	public static final String RATE = "rate";
 	public static final String PERFORMANCE = "performance";
@@ -77,6 +81,14 @@ public abstract class AMSupport {
 	
 	// number of milliseconds between refreshs
 	public static final int MS_PER_REFRESH = 1000;
+	
+	// history threshold
+	public static final int HISTORY_LIMIT = 500;
+	
+	// numberic system types
+	public static final int JAVA = 0;
+	public static final int HTML5 = 1;
+	public static final int DATABASE = 2;
 	
 	// the following are names of files used
 	public static final String LOG_FILE = "ApplicationMonitorLog.log";

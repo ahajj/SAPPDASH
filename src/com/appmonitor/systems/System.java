@@ -14,13 +14,14 @@ public abstract class System implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 	// private members shared across all System types
 	private String id;
 	private String type;
 	private String account;
 	private String state;
 	private List<Metric> metrics;
+	private List<String> states;
 	
 
 	
@@ -49,6 +50,9 @@ public abstract class System implements Serializable {
 	}
 	public void setState(String state) {
 		this.state = state;
+		
+		// add the state to the list of states
+		addStateToStates(state);
 	}
 	public List<Metric> getMetrics() {
 		return metrics;
@@ -69,6 +73,7 @@ public abstract class System implements Serializable {
 		this.account = "";
 		this.state = "";
 		this.metrics = new ArrayList<Metric>();
+		this.states = new ArrayList<String>();
 	}
 	
 	public System(String type, String account, List<Metric> metrics) {
@@ -77,6 +82,7 @@ public abstract class System implements Serializable {
 		this.type = type;
 		this.account = account;
 		this.metrics = metrics;
+		this.states = new ArrayList<String>();
 		this.generateState();
 	}
 	
@@ -86,18 +92,32 @@ public abstract class System implements Serializable {
 		this.type = type;
 		this.account = account;
 		this.metrics = new ArrayList<Metric>();
+		this.states = new ArrayList<String>();
 	}
 	
 	// Default function to get the system health
 	public String getSystemHealth() {
 		
+		String sysStatus = AMSupport.HEALTHY_STATUS;
 		// run through the metrics
 		for (Metric metric: this.getMetrics())
 		{
-			if (!AMSupport.getStatusForState(metric.getState()).equals(AMSupport.HEALTHY_STATUS))
+			
+			String metStatus = AMSupport.getStatusForState(metric.getState());
+			if (metStatus.equals(AMSupport.UNHEALTHY_STATUS))
 			{
-				return AMSupport.getStatusForState(metric.getState());
+				sysStatus = AMSupport.getStatusForState(metric.getState());
 			}
+			else if (metStatus.equals(AMSupport.UNKNOWN_STATUS) || metStatus.equals(AMSupport.RESTART_STATUS))
+			{
+				return AMSupport.getStatusForState(metric.getState());				
+			}
+			
+		}
+		
+		if (!sysStatus.equals(AMSupport.HEALTHY_STATUS))
+		{
+			return sysStatus;
 		}
 		
 		return AMSupport.getStatusForState(this.state);
@@ -146,6 +166,7 @@ public abstract class System implements Serializable {
 			if (metricState.equals(AMSupport.CRITICAL_STATE) || metricState.equals(AMSupport.ERROR_STATE) || metricState.equals(AMSupport.UNKNOWN_STATE))
 			{
 				state = metricState;
+				addStateToStates(state);
 				return;
 			}
 			// make note of metrics that are in warning state
@@ -158,6 +179,30 @@ public abstract class System implements Serializable {
 		}
 		
 		state = sysState;
+		
+		// add the most recent state to the list of states
+		addStateToStates(state);
+	}
+	
+	protected void addStateToStates(String state)
+	{
+		// add the value to the values list
+		states.add(state);
+		
+		// we only want to keep a history of the last 500 entries
+		if (states.size() > AMSupport.HISTORY_LIMIT)
+		{
+			// this will remove the oldest value
+			states.remove(0);
+		}
+	}
+	
+	public void removePreviousState()
+	{
+		if (states.size() > 0)
+		{
+			states.remove(states.size()-1);			
+		}
 	}
 	
 	@Override
@@ -229,6 +274,27 @@ public abstract class System implements Serializable {
 		return count;
 	}
 	
+	public Double calcPerInState(String state)
+	{
+		// return 0 if there are no states
+		if (states.size() == 0)
+		{
+			return 0d;
+		}
+		
+		int count = 0;
+		
+		for (String sysState: states) {
+			if (AMSupport.getStatusForState(sysState).equals(state))
+			{
+				count++;
+			}
+		}
+		
+		return  (((double)count*100)/states.size());
+		
+	}
+	
 	// This function assigns a random value to the metric.
 	// This simulates having a live system that constantly has the metric updating
 	public void simulateUpdatingMetrics()
@@ -241,5 +307,19 @@ public abstract class System implements Serializable {
 		}
 	}
 
+	public List<Metric> getMetricsForHealthStatus(String status)
+	{
+		List<Metric> metricsToGo = new ArrayList<Metric>();
+		
+		for(Metric metric : metrics)
+		{
+			if (AMSupport.getStatusForState(metric.getState()).equals(status))
+			{
+				metricsToGo.add(metric);
+			}
+		}
+		
+		return metricsToGo;
+	}
 
 }

@@ -11,7 +11,7 @@ public class DatabaseSystem extends System {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 	private String dbsystem;
 	
 	public DatabaseSystem(String type, String account, List<Metric> metrics, String dbsystem) {

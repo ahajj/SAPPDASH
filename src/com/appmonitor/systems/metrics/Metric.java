@@ -134,11 +134,14 @@ public class Metric implements Serializable {
 		
 		// generate a little status blurb
 		output += AMSupport.getStatusForState(state) + " - " 	
-				+ "'" + name + "' at " + value + " " + unit;
-		// Analyze the metric to see the value is under Error and Warning levels
-		output += "\n	**** Analysis: " + ((warningThreshold == 0 && errorThreshold == 0) ? (value + " " + unit + " " + name) : AMSupport.getMessageForValueWithThresholds(value, warningThreshold, errorThreshold)) + "	****\n\n";
-		
+				+ "'" + name + "' at " + value + " " + unit +"\n";	
 		return output;
+	}
+	
+	public String generateNiceSummary() {
+		// Analyze the metric to see the value is under Error and Warning levels
+		return " * " + "'" + name + "' at " + value + " " + unit + " (W:" + warningThreshold + unit + "|E:" + errorThreshold + unit + ")";
+				
 	}
 
 	public String getUnit() {
