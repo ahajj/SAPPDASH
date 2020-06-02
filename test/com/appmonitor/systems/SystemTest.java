@@ -116,4 +116,62 @@ public class SystemTest {
 		
 	}
 	
+	// test percent of states for state
+	@Test
+	public void testPerState() 
+	{
+		
+		// start fresh system
+		List<Metric> metrics = new ArrayList<Metric>();
+		
+		metrics.add(new Metric("testMetric1", 45l, "%", 50, 60, 32423424l, "rate", 20,60));
+		
+		testSystem =new HTML5System("testSystem1","testAccount", metrics, "testApplication");
+		
+		// add 4 error states
+		testSystem.addStateToStates(AMSupport.ERROR_STATE);
+		testSystem.addStateToStates(AMSupport.ERROR_STATE);
+		testSystem.addStateToStates(AMSupport.ERROR_STATE);
+		testSystem.addStateToStates(AMSupport.ERROR_STATE);
+		
+		Assert.assertTrue("The percent with an error state was actually " + testSystem.calcPerInState(AMSupport.RESTART_STATUS), testSystem.calcPerInState(AMSupport.RESTART_STATUS) == 80.0d);
+		
+		// add 5 warning states
+		testSystem.addStateToStates(AMSupport.WARNING_STATE);
+		testSystem.addStateToStates(AMSupport.WARNING_STATE);
+		testSystem.addStateToStates(AMSupport.WARNING_STATE);
+		testSystem.addStateToStates(AMSupport.WARNING_STATE);
+		testSystem.addStateToStates(AMSupport.WARNING_STATE);
+		
+		Assert.assertTrue("The percent with an error state was actually " + testSystem.calcPerInState(AMSupport.RESTART_STATUS), testSystem.calcPerInState(AMSupport.RESTART_STATUS) == 40.0d);
+		Assert.assertTrue("The percent with an warning state was actually " + testSystem.calcPerInState(AMSupport.UNHEALTHY_STATUS), testSystem.calcPerInState(AMSupport.UNHEALTHY_STATUS) == 50.0d);
+		Assert.assertTrue("The percent with an ok state was actually " + testSystem.calcPerInState(AMSupport.HEALTHY_STATUS), testSystem.calcPerInState(AMSupport.HEALTHY_STATUS) == 10.0d);
+		
+	}
+	
+	// test the function that gets the metrics for a given status
+	@Test
+	public void testGetMetricsForStatus()
+	{
+		// start fresh system
+		List<Metric> metrics = new ArrayList<Metric>();
+		metrics.add(new Metric("testMetric1", 45l, "%", 50, 60, 32423424l, "rate", 20,60));
+		// two warning metrics
+		metrics.add(new Metric("testMetric2", 51l, "%", 50, 60, 32423424l, "rate", 20,60));
+		metrics.add(new Metric("testMetric3", 51l, "%", 50, 60, 32423424l, "rate", 20,60));
+		
+		// three error metrics
+		metrics.add(new Metric("testMetric4", 61l, "%", 50, 60, 32423424l, "rate", 20,60));
+		metrics.add(new Metric("testMetric5", 64l, "%", 50, 60, 32423424l, "rate", 20,60));
+		metrics.add(new Metric("testMetric6", 65l, "%", 50, 60, 32423424l, "rate", 20,60));
+		
+		// Create a HTML5Ssystem for this test since it just overrides the abstract and toString() methods
+		testSystem = new HTML5System("testSystem1","testAccount", metrics, "testApplication");
+		
+		Assert.assertTrue("The number of healthy systems was actuall " + testSystem.getMetricsForHealthStatus(AMSupport.HEALTHY_STATUS).size(), testSystem.getMetricsForHealthStatus(AMSupport.HEALTHY_STATUS).size() == 1);
+		Assert.assertTrue("The number of unhealthy systems was actuall " + testSystem.getMetricsForHealthStatus(AMSupport.UNHEALTHY_STATUS).size(), testSystem.getMetricsForHealthStatus(AMSupport.UNHEALTHY_STATUS).size() == 2);
+		Assert.assertTrue("The number of restart recommended systems was actuall " + testSystem.getMetricsForHealthStatus(AMSupport.RESTART_STATUS).size(), testSystem.getMetricsForHealthStatus(AMSupport.RESTART_STATUS).size() == 3);
+		
+	}
+	
 }
