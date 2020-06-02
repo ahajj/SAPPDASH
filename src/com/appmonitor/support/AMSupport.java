@@ -85,6 +85,9 @@ public abstract class AMSupport {
 	// history threshold
 	public static final int HISTORY_LIMIT = 500;
 	
+	// threshold for a metric percent in error state
+	public static final Double METRIC_ERROR_PER = 35.0;
+	
 	// numberic system types
 	public static final int JAVA = 0;
 	public static final int HTML5 = 1;
@@ -281,6 +284,27 @@ public abstract class AMSupport {
 		catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
+	 }
+	 
+	 public static Double calcPerInStateForStates(String state, List<String> states)
+	 {
+			// return 0 if there are no states
+			if (states.size() == 0)
+			{
+				return 0d;
+			}
+			
+			int count = 0;
+			
+			for (String sysState: states) {
+				if (AMSupport.getStatusForState(sysState).equals(state))
+				{
+					count++;
+				}
+			}
+			
+			return  (((double)count*100)/states.size());
+			
 	 }
 
 }

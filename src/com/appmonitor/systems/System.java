@@ -274,25 +274,11 @@ public abstract class System implements Serializable {
 		return count;
 	}
 	
+	// calculates the percentage the metric was in the gven state
 	public Double calcPerInState(String state)
 	{
-		// return 0 if there are no states
-		if (states.size() == 0)
-		{
-			return 0d;
-		}
 		
-		int count = 0;
-		
-		for (String sysState: states) {
-			if (AMSupport.getStatusForState(sysState).equals(state))
-			{
-				count++;
-			}
-		}
-		
-		return  (((double)count*100)/states.size());
-		
+		return  AMSupport.calcPerInStateForStates(state, states);
 	}
 	
 	// This function assigns a random value to the metric.
@@ -307,6 +293,7 @@ public abstract class System implements Serializable {
 		}
 	}
 
+	// Search through the system metrics for ones with the passed in status
 	public List<Metric> getMetricsForHealthStatus(String status)
 	{
 		List<Metric> metricsToGo = new ArrayList<Metric>();
@@ -319,7 +306,37 @@ public abstract class System implements Serializable {
 			}
 		}
 		
+		// returns an empty list if there are no metrics
 		return metricsToGo;
+	}
+	
+	public void printProblemMetrics()
+	{
+		// we only want to append the 'title' if a metric with the problem status was found and only the first time
+		boolean first = true;
+		for (Metric metric: metrics)
+		{
+			if(metric.calcPerInState(AMSupport.RESTART_STATUS) > AMSupport.METRIC_ERROR_PER)
+			{
+				
+				if (first) 
+				{	
+					// Print the title
+					AMSupport.appendToLogFile("Metrics that have had errors over " + AMSupport.METRIC_ERROR_PER + "% of the time:  ");
+					first = false;
+				}
+				
+				metric.printHistoricalStateAnalysis();
+
+			}
+		}
+		
+		// if first is false then at least one error metric was found.
+		if (!first)
+		{
+			// add a new line to the log for separation
+			AMSupport.appendToLogFile("\n");			
+		}
 	}
 
 }

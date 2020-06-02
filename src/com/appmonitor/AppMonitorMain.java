@@ -189,12 +189,12 @@ public class AppMonitorMain {
 			 switch (answer) {
 			 case("c"):
 			 case("C"):
-				 java.lang.System.out.print("Beginning Continuous mode!");
+				 java.lang.System.out.print("\nBeginning Continuous mode!");
 				 reader.close();
 			 	 return true;
 			 case("s"):
 			 case("S"):
-				 java.lang.System.out.print("Beginning Sandbox Mode:\n Please enter the number of each system you would like to generate followed by the number of refreshes you would like to run.\n For example, creating 3 Java systems, 2 HTML5 systems and 1 Database system to be updated 45 times would look like '3 2 1 45' : ");
+				 java.lang.System.out.print("\nBeginning Sandbox Mode:\n Please enter the number of each system you would like to generate followed by the number of refreshes you would like to run.\n For example, creating 3 Java systems, 2 HTML5 systems and 1 Database system to be updated 45 times would look like '3 2 1 45' : ");
 				return false;
 			 }	 
 		 }

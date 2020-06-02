@@ -14,7 +14,7 @@ public class Metric implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 	private String name;
 	private String state;
 	private long value;
@@ -26,6 +26,8 @@ public class Metric implements Serializable {
 	private String metricType;
 	private int min;
 	private int max;
+	
+	private List<String> states;
 	
 	public String getName() {
 		return name;
@@ -51,7 +53,7 @@ public class Metric implements Serializable {
 		this.value = value;
 		
 		// we only want to keep a history of the last 500 entries
-		if (values.size() > 500)
+		if (values.size() > AMSupport.HISTORY_LIMIT)
 		{
 			// this will remove the oldest value
 			values.remove(0);
@@ -77,6 +79,7 @@ public class Metric implements Serializable {
 		this.max = max;
 		
 		this.values = new ArrayList<Long>();
+		this.states = new ArrayList<String>();
 		this.values.add(value);
 		this.generateStateBasedOnValueAndThresholds();
 	}
@@ -90,6 +93,7 @@ public class Metric implements Serializable {
 		if (name.equals(AMSupport.AVG_RESP_TIME) || name.equals(AMSupport.REQ_PER_MIN))
 		{
 			state = AMSupport.OK_STATE;
+			states.add(state);
 			return;
 		}
 		
@@ -105,6 +109,7 @@ public class Metric implements Serializable {
 		else {
 			state = AMSupport.OK_STATE;
 		}
+		states.add(state);
 	}
 	
 	// since this application is text based
@@ -175,5 +180,19 @@ public class Metric implements Serializable {
 	public List<Long> getValues()
 	{
 		return values;
+	}
+	
+	// calculates the percentage the metric was in the gven state
+	public Double calcPerInState(String state)
+	{
+		
+		return  AMSupport.calcPerInStateForStates(state, states);
+	}
+	
+	public void printHistoricalStateAnalysis()
+	{
+		AMSupport.appendToLogFile(" * " + name + ": " + AMSupport.HEALTHY_STATUS + " " + String.format("%.02f", calcPerInState(AMSupport.HEALTHY_STATUS)) + "% "
+				+ " | " + AMSupport.UNHEALTHY_STATUS + " " + String.format("%.02f", calcPerInState(AMSupport.UNHEALTHY_STATUS)) + "% "
+				+ " | " + AMSupport.RESTART_STATUS + " " + String.format("%.02f", calcPerInState(AMSupport.RESTART_STATUS)) + "% ");
 	}
 }

@@ -23,7 +23,8 @@ public class CurrentStateAnalyzer extends AnalyzerSet {
 	
 	}
 	
-	private void writeDetailsToLogForSysHealth(System system) {
+	@Override
+	protected void writeDetailsToLogForSysHealth(System system) {
 		
 		// If provide the metrics causing the problems if the system is
 		// Unhealthy or Restart Recommended
