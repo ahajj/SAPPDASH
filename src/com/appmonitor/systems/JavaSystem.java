@@ -206,6 +206,7 @@ public class JavaSystem extends System {
 		super.niceOutputBottom();
 	}
 	
+	// Counts the number processes with the given state
 	protected int countProcessesWithState(String state)
 	{
 		int count = 0;

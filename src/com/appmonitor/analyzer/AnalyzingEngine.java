@@ -17,7 +17,7 @@ public class AnalyzingEngine<aAnalyzerSet extends AnalyzerSet> {
 	
 	}
 	
-	
+	// Analyze the passed in system using the AnalyzerSet assigned to this AnalyzingEngine
 	public void analyze(System system) {
 		// analyze the system
 		analyzerSet.analyzeSystem(system);

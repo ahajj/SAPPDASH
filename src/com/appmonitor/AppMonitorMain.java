@@ -8,6 +8,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import org.junit.platform.commons.util.StringUtils;
+
 import com.appmonitor.analyzer.AnalyzingEngine;
 import com.appmonitor.analyzer.CurrentStateAnalyzer;
 import com.appmonitor.analyzer.HistoricalAnalyzer;
@@ -23,8 +25,10 @@ public class AppMonitorMain {
 	// This sets the number of systems generated to 6.
 	private final static int numberOfSystems = 3;
 	
+	// systems used in this run
 	private static List<System> systems;
 	
+	// the scanner used for user input
 	private static Scanner reader = new Scanner(java.lang.System.in);
 
 	// main function for the app monitor
@@ -33,7 +37,8 @@ public class AppMonitorMain {
 		// First, clear the log so it is fresh for each runtime.
 		AMSupport.clearLogFile();
 		
-		// check if the system should be run in continuous mod
+		// check if the system should be run in continuous mode
+		// Assignment 3 - Post Conditions 1 & 4: Support Continuous and Sandbox mode
 		if (promptAndCheckIfContinuousMode())
 		{
 			beginContinuousMode();
@@ -51,10 +56,30 @@ public class AppMonitorMain {
 			 StringTokenizer answerTokens = new StringTokenizer(answer);
 			 ArrayList<Integer> answerReturn = new ArrayList<Integer>();
 			 while (answerTokens.hasMoreTokens()){
-				 answerReturn.add(new Integer(answerTokens.nextToken()));
+				  
+				 String token = answerTokens.nextToken();
+				 
+				 // check if this token is not numeric
+				 if (!token.chars().allMatch( Character::isDigit ))
+				 {
+					 // this gets entered if a non numeric value has been entered.
+					 // in which case we let the user know and exit
+					 java.lang.System.out.println("A non numeric value, '" + token + "', was entered! Please only enter numbers!");
+					 java.lang.System.exit(0);
+				 }
+				 
+				 answerReturn.add(new Integer(token));
 			 }
 			 
 			 // answerReturn should have 4 integers
+			 if (answerReturn.size() < 4)
+			 {
+				 // let the user know that not enough inputs were passed in
+				 // don't really care if more than 4 were passed in as we will only use the first 4
+				 java.lang.System.out.println("Not enough values were input! Only '" + answerReturn.size() + "' values were parsed out of: " + answer);
+				 java.lang.System.exit(0);
+			 }
+			 
 			 List<System> systems = new ArrayList<System>();
 			 
 			 for (int i = 0; i < 3; i++)
@@ -82,7 +107,6 @@ public class AppMonitorMain {
 	
 	public static void beginContinuousMode()
 	{
-		// Assignment 2 - Post Condition 4 & 5: System Recovery and Handle New Systems (Exception Handling)
 		try
 		{
 			// Attempt to read serialized systems from a file.
@@ -126,8 +150,7 @@ public class AppMonitorMain {
 		AnalyzingEngine<HistoricalAnalyzer> hisAnalyzer = new AnalyzingEngine<HistoricalAnalyzer>();
 		hisAnalyzer.setAnalyzerSet(new HistoricalAnalyzer());
 		
-		// Assignment 2 - Post Condition 1: Advanced Visual Monitoring
-		
+		// Loop through all the systems and simulate an update
 		for (System system: systems)
 		{	
 			
@@ -143,8 +166,6 @@ public class AppMonitorMain {
 			// then a more detailed, complete version will be shown in the log
 			system.niceOutput();
 			
-			// Assignment 2 - Post Condition 3: Detailed Log file
-			// Also log the full details of the system metrics & processes to the log file
 			
 			// Treat Java apps as special.  We only want to print out the full list of metrics if
 			// the state is not OK...otherwise it will clutter the console
@@ -156,9 +177,11 @@ public class AppMonitorMain {
 				AMSupport.appendToLogFile(system.generateSystemStats());
 			}
 			
+			// Assignment 3 - Post condition 2: Current State Analysis of the system
 			// Analyze the current system state
 			curStateAnalyzer.analyze(system);
 			
+			// Assignment 3 - Post condition 3: Historical Analysis of the system
 			// Analyze the historical system states
 			hisAnalyzer.analyze(system);
 			
@@ -172,9 +195,7 @@ public class AppMonitorMain {
 	
 	public static boolean promptAndCheckIfContinuousMode()
 	{
-		// prompt the user to select either full on monitor mode
-		
-		// or sandbox mode
+		// prompt the user to select either continuous or sandbox mode
 		
 		 java.lang.System.out.print("Welcome to SAPPDASH! \nCurrently two modes are supported...\nContinuous will generate/recover systems and will run until the application is closed\nSandbox will allow you to input systems and time to monitor.");
 		 
@@ -233,6 +254,7 @@ public class AppMonitorMain {
 		return systems;
 	}
 	
+	// Creates a system based on the passed in system type
 	public static System createSystem(int sysType)
 	{
 		System system;
@@ -273,6 +295,8 @@ public class AppMonitorMain {
 		return system;
 	}
 	
+	// creates a passed in number of systems for the given system type
+	// sysTypes: 0 - Java, 1 - HTMl5, 2 - Database
 	public static List<System> createSystemsList(int sysType, int numberOfSystems)
 	{
 		List<System> systems = new ArrayList<System>();

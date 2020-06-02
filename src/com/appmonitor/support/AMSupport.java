@@ -286,6 +286,8 @@ public abstract class AMSupport {
 		}
 	 }
 	 
+	 // Calculates the % the passed in state appears in the list of states
+	 // useful for checking to see the percentage of refreshes a system/metric was in an error/warning/okay state
 	 public static Double calcPerInStateForStates(String state, List<String> states)
 	 {
 			// return 0 if there are no states
