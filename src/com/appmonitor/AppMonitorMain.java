@@ -26,7 +26,9 @@ public class AppMonitorMain {
 	private final static int numberOfSystems = 3;
 	
 	// systems used in this run
-	private static List<System> systems;
+	private static List<System> systems = new ArrayList<System>();
+	
+	private static int currentNumberOfSystems = 0;
 	
 	// the scanner used for user input
 	private static Scanner reader = new Scanner(java.lang.System.in);
@@ -262,20 +264,23 @@ public class AppMonitorMain {
 		switch (sysType%3) {
 		// java system
 		case AMSupport.JAVA: 
-			system = new JavaSystem("java","account"+ sysType,"applicationName"+sysType);
+			system = new JavaSystem("java","account"+ currentNumberOfSystems,"applicationName"+currentNumberOfSystems);
 			break;
 		// html5 system
 		case AMSupport.HTML5:
-			system = new HTML5System("html5","account"+ sysType,"applicationName"+sysType);
+			system = new HTML5System("html5","account"+ currentNumberOfSystems,"applicationName"+currentNumberOfSystems);
 			break;
 		// database system
 		case AMSupport.DATABASE:
-			system = new DatabaseSystem("database","account"+ sysType,"applicationName"+sysType);
+			system = new DatabaseSystem("database","account"+currentNumberOfSystems,"applicationName"+currentNumberOfSystems);
 			break;
 		default:
-			system = new JavaSystem("java","account"+ sysType,"applicationName"+sysType);
+			system = new JavaSystem("java","account"+ currentNumberOfSystems,"applicationName"+currentNumberOfSystems);
 			break;
 		}
+		
+		//increment the current number of systems
+		currentNumberOfSystems++;
 		
 		// Generate the metrics for each system
 		// Polymorphism

@@ -91,6 +91,16 @@ public class MetricTest {
 		
 	}
 	
+	@Test 
+	public void testGetNiceSummary()
+	{
+		Metric testMetric2 = new Metric("testMetric", 25l, "%", warningThreshold, errorThreshold, 33333333, "rate", 25, 40);
+		
+		String niceSummary = testMetric2.generateNiceSummary();
+		java.lang.System.out.print(niceSummary);
+		Assert.assertTrue("The nice summary was actually " + niceSummary, niceSummary.equals(" * 'testMetric' at 25 % (W:60%|E:75%)"));
+	}
+	
 	
 	
 }

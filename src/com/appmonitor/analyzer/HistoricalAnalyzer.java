@@ -3,10 +3,10 @@ package com.appmonitor.analyzer;
 import com.appmonitor.support.AMSupport;
 import com.appmonitor.systems.System;
 
-public class HistoricalAnalyzer extends AnalyzerSet {
+public final class HistoricalAnalyzer extends AnalyzerSet {
 
 	@Override
-	public void analyzeSystem(System system) {
+	public final void analyzeSystem(System system) {
 		
 		// Analyze the system by getting the metrics and examining their historical values
 		
@@ -20,7 +20,7 @@ public class HistoricalAnalyzer extends AnalyzerSet {
 	}
 	
 	// get average requests for java systems
-	private String generateHistoricalStats(System system)
+	protected final String generateHistoricalStats(System system)
 	{
 		return "Historical Analysis Breakdown:\n	" + AMSupport.HEALTHY_STATUS + " " + String.format("%.02f", system.calcPerInState(AMSupport.HEALTHY_STATUS)) + "% "
 				+ " | " + AMSupport.UNHEALTHY_STATUS + " " + String.format("%.02f", system.calcPerInState(AMSupport.UNHEALTHY_STATUS)) + "% "
@@ -29,7 +29,7 @@ public class HistoricalAnalyzer extends AnalyzerSet {
 	}
 	
 	@Override
-	protected void writeDetailsToLogForSysHealth(System system) {
+	protected final void writeDetailsToLogForSysHealth(System system) {
 		
 		system.printProblemMetrics();
 

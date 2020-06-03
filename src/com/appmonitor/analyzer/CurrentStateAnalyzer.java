@@ -7,10 +7,10 @@ import com.appmonitor.support.AMSupport;
 import com.appmonitor.systems.System;
 import com.appmonitor.systems.metrics.Metric;
 
-public class CurrentStateAnalyzer extends AnalyzerSet {
+public final class CurrentStateAnalyzer extends AnalyzerSet {
 
 	@Override
-	public void analyzeSystem(System system) {
+	public final void analyzeSystem(System system) {
 		
 		// Analyze the system in its current state and print it to the console
 		String sysHealth = system.getSystemHealth();
@@ -24,7 +24,7 @@ public class CurrentStateAnalyzer extends AnalyzerSet {
 	}
 	
 	@Override
-	protected void writeDetailsToLogForSysHealth(System system) {
+	protected final void writeDetailsToLogForSysHealth(System system) {
 		
 		// If provide the metrics causing the problems if the system is
 		// Unhealthy or Restart Recommended
