@@ -29,6 +29,7 @@ public final class CurrentStateAnalyzer extends AnalyzerSet {
 		// If provide the metrics causing the problems if the system is
 		// Unhealthy or Restart Recommended
 		String sysHealth = system.getSystemHealth();
+		AMSupport.appendToLogFile("Analyzing " +  system.getId() + "'s current state...");
 		
 		List<Metric> metrics = new ArrayList<Metric>();
 		
@@ -65,11 +66,11 @@ public final class CurrentStateAnalyzer extends AnalyzerSet {
 			break;
 		default:
 			// do healthy analysis here
-			AMSupport.appendToLogFile("All metrics show the system is healthy.");
+			AMSupport.appendToLogFile("All metrics show that " +  system.getId() + " is healthy.");
 		}
 		
 		// add a new line to the log for separation
-		AMSupport.appendToLogFile("\n");
+		AMSupport.appendToLogFile("Finished Current State Analysis\n");
 	}
 
 }

@@ -10,7 +10,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -95,7 +98,7 @@ public abstract class AMSupport {
 	
 	// the following are names of files used
 	public static final String LOG_FILE = "ApplicationMonitorLog.log";
-	public static final String SYSTEM_BACKUP_FILE = "SystemBackup.txt";
+	public static final String SYSTEM_BACKUP_FILE = "SystemBackup.dat";
 	
 	public static String getStatusForState(String state) {
 		switch (state) {
@@ -128,10 +131,14 @@ public abstract class AMSupport {
 	// Function to append the given string the log file
 	public static void appendToLogFile(String string) { 
 		
+		// add a timestamp to the long line
+	    Date date = new Date();
+	    Format format = new SimpleDateFormat("yyyy MM dd HH:mm:ss");
+		
 		BufferedWriter bw = null;
 		try {
 			bw = new BufferedWriter(new FileWriter(LOG_FILE, true)); 
-			bw.write(string);  
+			bw.write("INFO [" + format.format(date) + "]: " + string);  
 			bw.newLine(); 
 			bw.flush();
 		} 

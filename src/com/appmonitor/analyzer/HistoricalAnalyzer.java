@@ -31,7 +31,10 @@ public final class HistoricalAnalyzer extends AnalyzerSet {
 	@Override
 	protected final void writeDetailsToLogForSysHealth(System system) {
 		
+
+		AMSupport.appendToLogFile("Analyzing " +  system.getId() + "'s historical state...");
 		system.printProblemMetrics();
+		AMSupport.appendToLogFile("Finished Historical Analysis\n");
 
 	}
 

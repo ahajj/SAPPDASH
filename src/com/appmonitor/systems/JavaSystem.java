@@ -135,6 +135,12 @@ public class JavaSystem extends System {
 	// The function that will generate the complete information (including metrics and processes) about the java system
 	@Override
 	public String generateSystemStats() {
+		
+		if (this.getState().equals(AMSupport.OK_STATE))
+		{
+			return generateSimpleSystemStats();
+		}
+		
 		String outputString = "Java " + super.toString();
 		
 		if (!processes.isEmpty())

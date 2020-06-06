@@ -7,6 +7,7 @@ import java.util.StringTokenizer;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 
 import org.junit.platform.commons.util.StringUtils;
 
@@ -168,17 +169,6 @@ public class AppMonitorMain {
 			// then a more detailed, complete version will be shown in the log
 			system.niceOutput();
 			
-			
-			// Treat Java apps as special.  We only want to print out the full list of metrics if
-			// the state is not OK...otherwise it will clutter the console
-			if (system instanceof JavaSystem && system.getState().equals(AMSupport.OK_STATE))
-			{
-				AMSupport.appendToLogFile(((JavaSystem) system).generateSimpleSystemStats());
-			}
-			else {
-				AMSupport.appendToLogFile(system.generateSystemStats());
-			}
-			
 			// Assignment 3 - Post condition 2: Current State Analysis of the system
 			// Analyze the current system state
 			curStateAnalyzer.analyze(system);
@@ -188,6 +178,23 @@ public class AppMonitorMain {
 			hisAnalyzer.analyze(system);
 			
 		}
+		
+		// Assignment 4 - Post conditions 2 & 3: Stream system stats and lambda
+		// we only want to log the systems that have warning or error states in full
+		
+		// State the log is printing out error or warning systems only
+		AMSupport.appendToLogFile("Systems that are currently in a Warning or Error State: ");
+		
+		// create an array of systems for the stream to take in
+		System[] sysArray = new System[systems.size()];
+		Stream<System> sysStream = Stream.of(sysArray);
+		
+		// add in the items in the list ot the array
+		systems.toArray(sysArray);
+		
+		// only get the non-okay state systems and print them to the log fully
+		sysStream.filter(s -> !s.getState().equals(AMSupport.OK_STATE))
+				.forEach(s -> AMSupport.appendToLogFile(s.generateSystemStats()));
 		
 		// This will 'backup' the systems
 		// next time AppMonitorMain runs it will try to recover them
