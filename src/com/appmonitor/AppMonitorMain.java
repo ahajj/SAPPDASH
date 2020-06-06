@@ -185,15 +185,9 @@ public class AppMonitorMain {
 		// State the log is printing out error or warning systems only
 		AMSupport.appendToLogFile("Systems that are currently in a Warning or Error State: ");
 		
-		// create an array of systems for the stream to take in
-		System[] sysArray = new System[systems.size()];
-		Stream<System> sysStream = Stream.of(sysArray);
-		
-		// add in the items in the list ot the array
-		systems.toArray(sysArray);
-		
 		// only get the non-okay state systems and print them to the log fully
-		sysStream.filter(s -> !s.getState().equals(AMSupport.OK_STATE))
+		systems.stream()
+				.filter(s -> !s.getState().equals(AMSupport.OK_STATE))
 				.forEach(s -> AMSupport.appendToLogFile(s.generateSystemStats()));
 		
 		// This will 'backup' the systems
