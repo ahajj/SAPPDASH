@@ -179,7 +179,7 @@ public class AppMonitorMain {
 			
 		}
 		
-		// Assignment 4 - Post conditions 2 & 3: Stream system stats and lambda
+		// Assignment 4 - Post conditions 1 & 2: Selective System Logging and Enhanced Logging
 		// we only want to log the systems that have warning or error states in full
 		
 		// State the log is printing out error or warning systems only
@@ -193,6 +193,7 @@ public class AppMonitorMain {
 		// This will 'backup' the systems
 		// next time AppMonitorMain runs it will try to recover them
 		// Assignment 2 - Post Conditiion 2: Serialize Systems
+		// Also Assignment 4 - Post Condition 3: Save Generated Systems
 		AMSupport.writeSystemsToFile(systems);
 	}
 	

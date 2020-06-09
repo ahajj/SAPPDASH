@@ -122,30 +122,22 @@ Historical Analysis Breakdown:
 	Healthy 75.00%  | Unhealthy 25.00%  | Restart Recommended 0.00% 
 
 
-Opening the more detailed log (ApplicationMonitorLog.log) will show something like the following:
+Opening the more detailed log (ApplicationMonitorLog.log) will show something like the following.  It now includes a timestamp and will only log systems that are in a warning or error state:
 
-HTML5 Application: html5account1applicationName1
-		Account: account1
+INFO [2020 06 06 13:29:05]: HTML5 Application: html5account4applicationName4
+		Account: account4
 		State: Error
 		Type: html5
 	Metrics: 
 	Metric 'HTML5 Metric 1': 
-		State: Error...Current Value: 91 %
+		State: Ok...Current Value: 19 %
 		Min Value: 20 %...Max Value: 30 %
 		Warning Threshold: 20 %...Error Threshold: 30 %
-		Timestamp: 2020 05 18 22:20:38
-		Output: Restart Recommended - 'HTML5 Metric 1' at 91 %
+		Timestamp: 2020 05 18 22:29:59
+		Output: Healthy - 'HTML5 Metric 1' at 19 %
 	Metric 'HTML5 Metric 2': 
-		State: Error...Current Value: 37 %
+		State: Error...Current Value: 96 %
 		Min Value: 20 %...Max Value: 30 %
 		Warning Threshold: 20 %...Error Threshold: 30 %
-		Timestamp: 2020 05 18 23:02:45
-		Output: Restart Recommended - 'HTML5 Metric 2' at 37 %
-
-The following Metrics have an Error! Metric Value is greatly above the Acceptable Range!
- * 'HTML5 Metric 1' at 91 % (W:20%|E:30%)
- * 'HTML5 Metric 2' at 37 % (W:20%|E:30%)
-
-
-Metrics that have had errors over 35.0% of the time:  
- * HTML5 Metric 1: Healthy 33.33%  | Unhealthy 0.00%  | Restart Recommended 66.67% 
+		Timestamp: 2020 05 18 22:49:29
+		Output: Restart Recommended - 'HTML5 Metric 2' at 96 %
