@@ -14,12 +14,14 @@ import org.junit.platform.commons.util.StringUtils;
 import com.appmonitor.analyzer.AnalyzingEngine;
 import com.appmonitor.analyzer.CurrentStateAnalyzer;
 import com.appmonitor.analyzer.HistoricalAnalyzer;
+import com.appmonitor.runnable.RefreshRunnable;
 import com.appmonitor.support.AMSupport;
 import com.appmonitor.support.SystemsRecoveryException;
 import com.appmonitor.systems.DatabaseSystem;
 import com.appmonitor.systems.HTML5System;
 import com.appmonitor.systems.JavaSystem;
 import com.appmonitor.systems.System;
+
 
 public class AppMonitorMain {
 	
@@ -91,20 +93,24 @@ public class AppMonitorMain {
 				 systems.addAll(createSystemsList(i, answerReturn.get(i)));
 			 }
 			 
-			 // a bit strange to have two different ways to run the refresh
-			 // but given the point of this class is not thread sleeps/scheduled executor service
-			 // using both for different circumstances is easiest
-			 // ex: SES for continuous refreshing...thread.sleep for a given number
-			 for (int c =0; c< answerReturn.get(3); c++)
-			 {
-				 trackSystems(systems);
-				 try {
-					Thread.sleep(AMSupport.MS_PER_REFRESH);
+			// create a list of threads - one for each system
+		     ArrayList<Thread> threads = new ArrayList<Thread>();
+		      
+		     int numRunTimes = answerReturn.get(3);
+		     for (int i = 0; i < systems.size(); i++)
+		    	 // simulate 'numRunTimes' updates per system
+		    	 // each refresh also saves the list of systems to the backup file to recover for the next
+		    	 // continuous run
+		          threads.add(new Thread(new RefreshRunnable(systems.get(i), numRunTimes)));
+
+		     for (Thread t : threads) t.start();  
+		     for (Thread t : threads)
+				try {
+					t.join();
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
-			 }
+				} 
 		}
 	}
 	
@@ -128,10 +134,22 @@ public class AppMonitorMain {
 		}
 
 		// This next bit is done to simulate getting status & metric value updates MS_PER_REFRESH milliseconds
-		// it is a scheduled executor that runs trackSystems() which will set a new value on each metric
-		// it also updates states
-	    final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-	    executorService.scheduleAtFixedRate(AppMonitorMain::trackSystems, 0, AMSupport.MS_PER_REFRESH, TimeUnit.MILLISECONDS);
+		// it creates a thread per system
+		// then on every refresh it updates the system and saves the list of systems to the backup file
+	     ArrayList<Thread> threads = new ArrayList<Thread>();
+	      
+	     for (int i = 0; i < systems.size(); i++)
+	          threads.add(new Thread(new RefreshRunnable(systems.get(i))));
+
+	     for (Thread t : threads) t.start();  
+	     for (Thread t : threads)
+			try {
+				t.join();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+
 		
 	}
 	
@@ -145,37 +163,10 @@ public class AppMonitorMain {
 
 		java.lang.System.out.println("************************ Refreshing ************************");
 		
-		// Create the AnalyzerEngines
-		AnalyzingEngine<CurrentStateAnalyzer> curStateAnalyzer = new AnalyzingEngine<CurrentStateAnalyzer>();
-		curStateAnalyzer.setAnalyzerSet(new CurrentStateAnalyzer());
-		
-		// Create the Historical Analyzer
-		AnalyzingEngine<HistoricalAnalyzer> hisAnalyzer = new AnalyzingEngine<HistoricalAnalyzer>();
-		hisAnalyzer.setAnalyzerSet(new HistoricalAnalyzer());
-		
 		// Loop through all the systems and simulate an update
 		for (System system: systems)
 		{	
-			
-			// randomly generates a new value for each metric on the system
-			// also will track up to the last 500 values per metric in order to keep a history
-			// to use when calculating the average
-			system.simulateUpdatingMetrics();
-			
-			// Generate the state of the system based on the metrics and processes (when applicable)
-			system.generateState();
-			
-			// for this version of the application we are showing a nice version of the application to the console
-			// then a more detailed, complete version will be shown in the log
-			system.niceOutput();
-			
-			// Assignment 3 - Post condition 2: Current State Analysis of the system
-			// Analyze the current system state
-			curStateAnalyzer.analyze(system);
-			
-			// Assignment 3 - Post condition 3: Historical Analysis of the system
-			// Analyze the historical system states
-			hisAnalyzer.analyze(system);
+			trackSystem(system);
 			
 		}
 		
@@ -195,6 +186,45 @@ public class AppMonitorMain {
 		// Assignment 2 - Post Conditiion 2: Serialize Systems
 		// Also Assignment 4 - Post Condition 3: Save Generated Systems
 		AMSupport.writeSystemsToFile(systems);
+	}
+	
+	public static void saveSystems()
+	{
+		AMSupport.writeSystemsToFile(systems);
+	}
+	
+	public static void trackSystem(System system)
+	{
+		
+		// Create the AnalyzerEngines
+		AnalyzingEngine<CurrentStateAnalyzer> curStateAnalyzer = new AnalyzingEngine<CurrentStateAnalyzer>();
+		curStateAnalyzer.setAnalyzerSet(new CurrentStateAnalyzer());
+		
+		// Create the Historical Analyzer
+		AnalyzingEngine<HistoricalAnalyzer> hisAnalyzer = new AnalyzingEngine<HistoricalAnalyzer>();
+		hisAnalyzer.setAnalyzerSet(new HistoricalAnalyzer());
+		
+		// randomly generates a new value for each metric on the system
+		// also will track up to the last 500 values per metric in order to keep a history
+		// to use when calculating the average
+		system.simulateUpdatingMetrics();
+		
+		// Generate the state of the system based on the metrics and processes (when applicable)
+		system.generateState();
+		
+		// for this version of the application we are showing a nice version of the application to the console
+		// then a more detailed, complete version will be shown in the log
+		system.niceOutput();
+		
+		// Assignment 3 - Post condition 2: Current State Analysis of the system
+		// Analyze the current system state
+		curStateAnalyzer.analyze(system);
+		
+		// Assignment 3 - Post condition 3: Historical Analysis of the system
+		// Analyze the historical system states
+		hisAnalyzer.analyze(system);
+		
+		saveSystems();
 	}
 	
 	public static boolean promptAndCheckIfContinuousMode()
