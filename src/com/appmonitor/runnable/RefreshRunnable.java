@@ -16,6 +16,7 @@ public class RefreshRunnable implements Runnable {
 		this.system = system;
 	}
 	
+	// this constructor passes in the number of times to refresh the system
 	public RefreshRunnable(System system, int numRunTimes) {
 		this.system = system;
 		this.numRunTimes = numRunTimes;
@@ -38,7 +39,7 @@ public class RefreshRunnable implements Runnable {
         		// track the system
         		AppMonitorMain.trackSystem(system);
         		
-        		// increase the number of runs this sytem has gone
+        		// increase the number of runs this system has gone
         		runs++;
         		
         		// display it in the console
@@ -57,8 +58,5 @@ public class RefreshRunnable implements Runnable {
     			Thread.currentThread().interrupt();
     		} 
     	}
-		
-
 	}
-
 }
