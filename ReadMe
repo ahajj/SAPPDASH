@@ -79,65 +79,78 @@ Generated System: databaseaccount2applicationName2!
 |_____________________________________|______________________________________________________________________
 |  Type:                               java |                                                      |        |
 | Account:                         account0 |                  Metric:      Value            State | Average|
-| State:                              Error |                                                      |        |
-| # of Metrics:                           8 |         Used Disc Space:  31 %          -         Ok |  15.75 |
-|    # Error:                             2 |     Requests per Minute:  18 requests   -         Ok |  46.50 |
-|    # Warning:                           0 |                CPU Load:  96 %          -      Error |  45.75 |
-|    # Ok:                                6 |                Disk I/O:   6 %          -         Ok |  43.50 |
-| # of Processes:                         1 |         OS Memory Usage:  89 %          -         Ok |  49.50 |
-|    # Error:                             1 |       Heap Memory Usage: 100 %          -      Error |  54.75 |
-|    # Warning:                           0 |   Average Response Time:  61 ms         -         Ok |  41.00 |
-|    # Ok:                                0 |            Busy Threads:  34            -         Ok |  58.50 |
+| State:                            Warning |                                                      |        |
+| # of Metrics:                           8 |         Used Disc Space:  24 %          -         Ok |  50.50 |
+|    # Error:                             0 |     Requests per Minute:  28 requests   -         Ok |  41.50 |
+|    # Warning:                           0 |                CPU Load:  61 %          -         Ok |  56.38 |
+|    # Ok:                                8 |                Disk I/O:  80 %          -         Ok |  48.63 |
+| # of Processes:                         2 |         OS Memory Usage:  27 %          -         Ok |  55.00 |
+|    # Error:                             0 |       Heap Memory Usage:  41 %          -         Ok |  39.25 |
+|    # Warning:                           1 |   Average Response Time:  90 ms         -         Ok |  49.88 |
+|    # Ok:                                1 |            Busy Threads:  57            -         Ok |  47.25 |
 \___________________________________________/\_____________________________________________________/\_______/
-Current Analysis: System Health and/or Recommended Action: Restart Recommended
+Current Analysis: System Health and/or Recommended Action: Unhealthy
 Historical Analysis Breakdown:
-	Healthy 0.00%  | Unhealthy 0.00%  | Restart Recommended 100.00% 
- _____________________________________
-/ html5account1applicationName1       \ 
-|_____________________________________|______________________________________________________________________
-|  Type:                              html5 |                                                      |        |
-| Account:                         account1 |                  Metric:      Value            State | Average|
-| State:                                 Ok |                                                      |        |
-| # of Metrics:                           2 |          HTML5 Metric 1:   1 %          -         Ok |  44.50 |
-|    # Error:                             0 |          HTML5 Metric 2:   0 %          -         Ok |  14.25 |
-|    # Warning:                           0 |                                                      |        |
-|    # Ok:                                2 |                                                      |        |
-\___________________________________________/\_____________________________________________________/\_______/
-Current Analysis: System Health and/or Recommended Action: Healthy
-Historical Analysis Breakdown:
-	Healthy 50.00%  | Unhealthy 0.00%  | Restart Recommended 50.00% 
+	Healthy 0.00%  | Unhealthy 87.50%  | Restart Recommended 12.50% 
+System refreshed 2 times.
  _____________________________________
 / databaseaccount2applicationName2    \ 
 |_____________________________________|______________________________________________________________________
 |  Type:                           database |                                                      |        |
 | Account:                         account2 |                  Metric:      Value            State | Average|
-| State:                            Warning |                                                      |        |
-| # of Metrics:                           2 |                CPU Load:  21 %          -         Ok |  40.75 |
-|    # Error:                             0 |                Disk I/O:  90 %          -    Warning |  52.25 |
-|    # Warning:                           1 |                                                      |        |
-|    # Ok:                                1 |                                                      |        |
+| State:                                 Ok |                                                      |        |
+| # of Metrics:                           2 |                CPU Load:  14 %          -         Ok |  50.00 |
+|    # Error:                             0 |                Disk I/O:  70 %          -         Ok |  42.00 |
+|    # Warning:                           0 |                                                      |        |
+|    # Ok:                                2 |                                                      |        |
 \___________________________________________/\_____________________________________________________/\_______/
-Current Analysis: System Health and/or Recommended Action: Unhealthy
+Current Analysis: System Health and/or Recommended Action: Healthy
 Historical Analysis Breakdown:
-	Healthy 75.00%  | Unhealthy 25.00%  | Restart Recommended 0.00% 
+	Healthy 75.00%  | Unhealthy 0.00%  | Restart Recommended 25.00% 
+System refreshed 2 times.
+ _____________________________________
+/ html5account1applicationName1       \ 
+|_____________________________________|______________________________________________________________________
+|  Type:                              html5 |                                                      |        |
+| Account:                         account1 |                  Metric:      Value            State | Average|
+| State:                              Error |                                                      |        |
+| # of Metrics:                           2 |          HTML5 Metric 1:  26 %          -    Warning |  44.50 |
+|    # Error:                             1 |          HTML5 Metric 2:  99 %          -      Error |  47.63 |
+|    # Warning:                           1 |                                                      |        |
+|    # Ok:                                0 |                                                      |        |
+\___________________________________________/\_____________________________________________________/\_______/
+Current Analysis: System Health and/or Recommended Action: Restart Recommended
+Historical Analysis Breakdown:
+	Healthy 12.50%  | Unhealthy 0.00%  | Restart Recommended 87.50% 
+System refreshed 2 times.
 
 
-Opening the more detailed log (ApplicationMonitorLog.log) will show something like the following.  It now includes a timestamp and will only log systems that are in a warning or error state:
+Opening the more detailed log (ApplicationMonitorLog.log) will show something like the following.  It now includes a timestamp and the analysis for each system
 
-INFO [2020 06 06 13:29:05]: HTML5 Application: html5account4applicationName4
-		Account: account4
-		State: Error
-		Type: html5
-	Metrics: 
-	Metric 'HTML5 Metric 1': 
-		State: Ok...Current Value: 19 %
-		Min Value: 20 %...Max Value: 30 %
-		Warning Threshold: 20 %...Error Threshold: 30 %
-		Timestamp: 2020 05 18 22:29:59
-		Output: Healthy - 'HTML5 Metric 1' at 19 %
-	Metric 'HTML5 Metric 2': 
-		State: Error...Current Value: 96 %
-		Min Value: 20 %...Max Value: 30 %
-		Warning Threshold: 20 %...Error Threshold: 30 %
-		Timestamp: 2020 05 18 22:49:29
-		Output: Restart Recommended - 'HTML5 Metric 2' at 96 %
+INFO [2020 06 15 20:26:21]: Analyzing javaaccount0applicationName0's current state...
+INFO [2020 06 15 20:26:21]: Finished Current State Analysis
+
+INFO [2020 06 15 20:26:21]: Analyzing javaaccount0applicationName0's historical state...
+INFO [2020 06 15 20:26:21]: Finished Historical Analysis
+
+INFO [2020 06 15 20:26:21]: Analyzing databaseaccount2applicationName2's current state...
+INFO [2020 06 15 20:26:21]: All metrics show that databaseaccount2applicationName2 is healthy.
+INFO [2020 06 15 20:26:21]: Finished Current State Analysis
+
+INFO [2020 06 15 20:26:21]: Analyzing databaseaccount2applicationName2's historical state...
+INFO [2020 06 15 20:26:21]: Finished Historical Analysis
+
+INFO [2020 06 15 20:26:21]: Analyzing html5account1applicationName1's current state...
+INFO [2020 06 15 20:26:21]: The following Metrics have an Error! Metric Value is greatly above the Acceptable Range!
+INFO [2020 06 15 20:26:21]:  * 'HTML5 Metric 2' at 99 % (W:20%|E:30%)
+INFO [2020 06 15 20:26:21]: The following Metrics have a Warning! Metric Value is slightly above the Acceptable Range!
+INFO [2020 06 15 20:26:21]:  * 'HTML5 Metric 1' at 26 % (W:20%|E:30%)
+INFO [2020 06 15 20:26:21]: Finished Current State Analysis
+
+INFO [2020 06 15 20:26:21]: Analyzing html5account1applicationName1's historical state...
+INFO [2020 06 15 20:26:21]: Metrics that have had errors over 35.0% of the time:  
+INFO [2020 06 15 20:26:21]:  * HTML5 Metric 1: Healthy 25.00%  | Unhealthy 25.00%  | Restart Recommended 50.00% 
+INFO [2020 06 15 20:26:21]:  * HTML5 Metric 2: Healthy 25.00%  | Unhealthy 0.00%  | Restart Recommended 75.00% 
+INFO [2020 06 15 20:26:21]: 
+
+INFO [2020 06 15 20:26:21]: Finished Historical Analysis
