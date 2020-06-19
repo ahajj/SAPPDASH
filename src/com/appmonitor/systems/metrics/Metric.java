@@ -45,6 +45,78 @@ public class Metric implements Serializable {
 		return timestamp;
 	}
 	
+	public int getWarningThreshold() {
+		return warningThreshold;
+	}
+
+	public void setWarningThreshold(int warningThreshold) {
+		this.warningThreshold = warningThreshold;
+	}
+
+	public int getErrorThreshold() {
+		return errorThreshold;
+	}
+
+	public void setErrorThreshold(int errorThreshold) {
+		this.errorThreshold = errorThreshold;
+	}
+
+	public String getMetricType() {
+		return metricType;
+	}
+
+	public void setMetricType(String metricType) {
+		this.metricType = metricType;
+	}
+
+	public int getMin() {
+		return min;
+	}
+
+	public void setMin(int min) {
+		this.min = min;
+	}
+
+	public int getMax() {
+		return max;
+	}
+
+	public void setMax(int max) {
+		this.max = max;
+	}
+
+	public List<String> getStates() {
+		return states;
+	}
+
+	public void setStates(List<String> states) {
+		this.states = states;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
+
+	public void setValues(List<Long> values) {
+		this.values = values;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
+	}
+
+	public void setTimestamp(long timestamp) {
+		this.timestamp = timestamp;
+	}
+
 	public void setValue(long value) {
 		
 		// add the value to the values list

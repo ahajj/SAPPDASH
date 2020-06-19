@@ -45,4 +45,8 @@ public class DatabaseSystem extends System {
 		super.niceOutput();
 		super.niceOutputBottom();
 	}
+
+	public String getDbSystem() {
+		return dbsystem;
+	}
 }

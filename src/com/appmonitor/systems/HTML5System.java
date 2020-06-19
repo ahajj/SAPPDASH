@@ -50,5 +50,9 @@ public class HTML5System extends System {
 		super.niceOutput();
 		super.niceOutputBottom();
 	}
+
+	public String getApplication() {
+		return application;
+	}
 	
 }

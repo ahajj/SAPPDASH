@@ -15,6 +15,7 @@ import com.appmonitor.analyzer.AnalyzingEngine;
 import com.appmonitor.analyzer.CurrentStateAnalyzer;
 import com.appmonitor.analyzer.HistoricalAnalyzer;
 import com.appmonitor.runnable.RefreshRunnable;
+import com.appmonitor.support.AMDBSupport;
 import com.appmonitor.support.AMSupport;
 import com.appmonitor.support.SystemsRecoveryException;
 import com.appmonitor.systems.DatabaseSystem;
@@ -224,6 +225,9 @@ public class AppMonitorMain {
 		// Analyze the historical system states
 		hisAnalyzer.analyze(system);
 		
+		// update the system
+		AMDBSupport.updateSystem(system);
+		
 		saveSystems();
 	}
 	
@@ -328,6 +332,9 @@ public class AppMonitorMain {
 		
 		// Print to the console the newly created System!
 		java.lang.System.out.println("Generated System: " + system.getId() + "!");
+		
+		// write that system to the database
+		AMDBSupport.insertSystem(system);
 		
 		return system;
 	}
