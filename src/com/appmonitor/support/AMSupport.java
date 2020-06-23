@@ -96,6 +96,12 @@ public abstract class AMSupport {
 	public static final int HTML5 = 1;
 	public static final int DATABASE = 2;
 	
+	// numberic system types
+	public static final String JAVA_STRING = "java";
+	public static final String HTML5_STRING = "html5";
+	public static final String DATABASE_STRING = "database";
+	
+	
 	// the following are names of files used
 	public static final String LOG_FILE = "ApplicationMonitorLog.log";
 	public static final String SYSTEM_BACKUP_FILE = "SystemBackup.dat";

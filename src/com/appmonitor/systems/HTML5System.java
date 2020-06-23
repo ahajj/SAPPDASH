@@ -21,6 +21,13 @@ public class HTML5System extends System {
 		this.application = application;
 		// TODO Auto-generated constructor stub
 	}
+	public HTML5System(String id, String type, String account, String application, String state) {
+		super(type, account);
+		this.setId(id);
+		this.application = application;
+		this.setState(state);
+		
+	}
 	
 	public HTML5System(String type, String account, List<Metric> metrics, String application) {
 		super(type, account, metrics);

@@ -20,6 +20,13 @@ public class DatabaseSystem extends System {
 		// TODO Auto-generated constructor stubf
 		this.dbsystem = dbsystem;
 	}
+	public DatabaseSystem(String id, String type, String account, String application, String state) {
+		super(type, account);
+		this.setId(id);
+		this.dbsystem = application;
+		this.setState(state);
+		
+	}
 
 	public DatabaseSystem(String type, String account, String dbsystem) {
 		super(type, account);

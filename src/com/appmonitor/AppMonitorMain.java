@@ -88,6 +88,9 @@ public class AppMonitorMain {
 			 
 			 List<System> systems = new ArrayList<System>();
 			 
+			 // clear the database tables so it is a fresh start
+			 AMDBSupport.dropAndCreateTables();
+			 
 			 for (int i = 0; i < 3; i++)
 			 {
 				 // create the java (i=0), html5 (i=1) and database (i=2) systems
@@ -119,9 +122,8 @@ public class AppMonitorMain {
 	{
 		try
 		{
-			// Attempt to read serialized systems from a file.
-			// throws SystemsRecoveryException if the file is not found
-			systems = AMSupport.readSystemsFromFile();			
+			// now we try to read the systems from the database
+			systems = AMDBSupport.getSystems();
 		}
 		catch(SystemsRecoveryException sre)
 		{
@@ -269,6 +271,9 @@ public class AppMonitorMain {
 		
 		java.lang.System.out.println("Generating Systems...");
 		
+		// we first have to wipe the db tables
+		AMDBSupport.dropAndCreateTables();
+		
 		// this list isn't totally random.  It will cycle through java, html5 and database
 		for (int c = 0; c < i; c++)
 		{
@@ -300,18 +305,18 @@ public class AppMonitorMain {
 		switch (sysType%3) {
 		// java system
 		case AMSupport.JAVA: 
-			system = new JavaSystem("java","account"+ currentNumberOfSystems,"applicationName"+currentNumberOfSystems);
+			system = new JavaSystem(AMSupport.JAVA_STRING,"account"+ currentNumberOfSystems,"applicationName"+currentNumberOfSystems);
 			break;
 		// html5 system
 		case AMSupport.HTML5:
-			system = new HTML5System("html5","account"+ currentNumberOfSystems,"applicationName"+currentNumberOfSystems);
+			system = new HTML5System(AMSupport.HTML5_STRING,"account"+ currentNumberOfSystems,"applicationName"+currentNumberOfSystems);
 			break;
 		// database system
 		case AMSupport.DATABASE:
-			system = new DatabaseSystem("database","account"+currentNumberOfSystems,"applicationName"+currentNumberOfSystems);
+			system = new DatabaseSystem(AMSupport.DATABASE_STRING,"account"+currentNumberOfSystems,"applicationName"+currentNumberOfSystems);
 			break;
 		default:
-			system = new JavaSystem("java","account"+ currentNumberOfSystems,"applicationName"+currentNumberOfSystems);
+			system = new JavaSystem(AMSupport.JAVA_STRING,"account"+ currentNumberOfSystems,"applicationName"+currentNumberOfSystems);
 			break;
 		}
 		

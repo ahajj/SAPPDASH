@@ -27,6 +27,14 @@ public class JavaSystem extends System {
 		this.processes = new ArrayList<Process>();
 		
 	}
+	public JavaSystem(String id, String type, String account, String application, String state) {
+		super(type, account);
+		this.setId(id);
+		this.application = application;
+		this.setState(state);
+		this.processes = new ArrayList<Process>();
+		
+	}
 	
 	public JavaSystem(String type, String account, List<Metric> metrics, String application) {
 		super(type, account, metrics);
