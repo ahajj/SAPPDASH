@@ -54,6 +54,9 @@ SAPPDASH keeps a record the last 500 metric values & states per metric.  These v
 Unit testing can be found under 'test'.  The test package structure mirrors src.
 
 **Note** Running AMSupportNoJUnit can be done to test File I/O as well as acts as a nice demo of the system.
+**Note** This test runs against SystemBackup.dat instead of a database
+
+The SQLite JDBC driver is required to run SAPPDASH.  Please be sure it is downloaded and imported into the project prior to running.
 
 -----  Sample Output -----
 
