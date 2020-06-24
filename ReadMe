@@ -21,6 +21,9 @@ The design is AppMonitorMain   --->  System
 A more detailed design and use case can be seen here:
 https://docs.google.com/spreadsheets/d/1JoeDf3j_TSLRCk0RRYlQg7WB0l5a8Q8P0SMfZs_QONE/edit?usp=sharing
            	      
+---  NOTE: You will need to import an SQLite jdbc driver for this project to work ---
+---  NOTE 2: You will need to change the url string in AMDBSupport.getConnection() to a path that leads to your SQLite Database ---     	      
+   
 All Systems have a list of Metrics which have contain warning and error thresholds.
 Metrics also contain the current value, as well as the min and max values.
 
